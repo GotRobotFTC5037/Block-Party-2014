@@ -16,11 +16,14 @@
 #define CALIBRATION_TIME 4000
 #define ANGLE_SENSOR_CIRCUMFERENCE 26
 #define JOYSTICK_METHOD NON_LINEAR
+#define TELE_OP_PARAMITER_FILE_SIZE 100
+#define TELE_OP_PARAMITER_FILE_NAME "tele_op_paramiter_pass.txt"
 char* g_next_available_memory_ptr;
 char g_buffer[DYNAMIC_MEMORY_SIZE];
 float g_drift;
 typedef enum
 {
-	NULL_POINTER
+	NULL_POINTER,
+	TEXT_FILE
 } e_exit_code;
 #endif /* !ABS_H */

@@ -14,11 +14,6 @@
 #ifndef ABS_GYRO_CAL_H
 #define ABS_GYRO_CAL_H
 
-string sFileName = "gotrobot.txt";
-TFileIOResult nIoResult;
-TFileHandle hFileHandle;
-int nFileSize = 100;
-
 /** macros */
 //====================================
 // Gyro Calibration helper function

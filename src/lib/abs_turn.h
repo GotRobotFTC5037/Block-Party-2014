@@ -20,7 +20,7 @@
 #include "abs_move_utils.h"
 #include "abs_gyro_read.h"
 #include "abs_get_mem.h"
-#include "abs_exit.h"
+#include "abs_report_error.h"
 /** macros */
 
 
@@ -36,7 +36,7 @@ void abs_turn(e_direction dir, e_turn_method turn_method, int degree, int speed)
 
 	if(tcontext == NULL)
 	{
-		abs_exit(NULL_POINTER);
+		abs_report_error(NULL_POINTER);
 	}
 	tcontext->time = 0;
 	tcontext->heading = 0;

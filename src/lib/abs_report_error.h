@@ -12,19 +12,26 @@
 #define ABS_EXIT_H
 
 /** macros */
-void abs_exit(e_exit_code exit)
+void abs_report_error(e_exit_code exit)
 {
 	if (exit == NULL_POINTER)
 	{
 		eraseDisplay();
-		nxtDisplayString(2,"ERROR!!!");
+		nxtDisplayString(2,"FATAL ERROR!!!");
 		nxtDisplayString(3,"ERROR CODE: 1");
 		nxtDisplayString(4,"NOT ENOUGH MEMORY!!!");
-		nxtDisplayString(5,"ADD MORE MEMORY OR ADD A");
-		nxtDisplayString(5,"WAY TO FREE MEMORY");
 		PlayTone(4000, 50);
 		wait10Msec(500);
 		StopAllTasks();
+	}
+	else if(exit == TEXT_FILE)
+	{
+		eraseDisplay();
+		nxtDisplayString(2,"ERROR!!!");
+		nxtDisplayString(3,"ERROR CODE: 2");
+		nxtDisplayString(4,"PROBLEM WITH TEXT FILE");
+		PlayTone(2000, 50);
+		wait10Msec(500);
 	}
 }
 //Error code 1: Not enough memory

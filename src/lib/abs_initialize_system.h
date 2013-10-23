@@ -15,22 +15,40 @@ void abs_initialize_system()
 	abs_create_mem();
 	g_drift = abs_gyro_cal(CALIBRATION_TIME);
 
-//====================================================
-// Drift file write for tele-op
-//====================================================
+	//====================================================
+	// Drift file write for tele-op
+	//====================================================
+	string sFileName = TELE_OP_PARAMITER_FILE_NAME;
+	TFileIOResult nIoResult;
+	TFileHandle hFileHandle;
+	int nFileSize = TELE_OP_PARAMITER_FILE_SIZE;
+
 	Delete(sFileName, nIoResult);
-	nFileSize = 100;
 	OpenWrite ( hFileHandle, nIoResult, sFileName, nFileSize);
-	WriteFloat( hFileHandle, nIoResult, g_drift);
-	//WriteFloat( hFileHandle, nIoResult, Driver_Cal);
-	Close(hFileHandle, nIoResult);
+	if(nIoResult != 0)
+	{
+		abs_report_error(TEXT_FILE);
+	}
+	else
+	{
+		WriteFloat( hFileHandle, nIoResult, g_drift);
+		if(nIoResult != 0)
+		{
+			abs_report_error(TEXT_FILE);
+		}
+		else
+		{
+			//WriteFloat( hFileHandle, nIoResult, Driver_Cal);
+			Close(hFileHandle, nIoResult);
+		}
+	}
 }
-/** enumerations */
+	/** enumerations */
 
-/** structures */
+	/** structures */
 
-/** function prototypes */
+	/** function prototypes */
 
-/** global constant variables */
+	/** global constant variables */
 
 #endif /* !ABS_INITIALIZE_SYSTEM_H */
