@@ -19,7 +19,7 @@
 char* abs_get_mem(int size)
 {
 	/** makes sure that we dont corrupt any memory */
-	if(g_buffer + DYNAMIC_MEMORY_SIZE > g_next_available_memory_ptr + size)
+	if(&g_buffer + DYNAMIC_MEMORY_SIZE > g_next_available_memory_ptr + size)
 	{
 		char* old_memory = g_next_available_memory_ptr;
 		g_next_available_memory_ptr = g_next_available_memory_ptr + size;
