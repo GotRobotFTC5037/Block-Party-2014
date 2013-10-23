@@ -16,6 +16,7 @@ void abs_exit(e_exit_code exit)
 {
 	if (exit == NULL_POINTER)
 	{
+		eraseDisplay();
 		nxtDisplayString(2,"ERROR!!!");
 		nxtDisplayString(3,"ERROR CODE: 1");
 		nxtDisplayString(4,"NOT ENOUGH MEMORY!!!");
@@ -26,6 +27,7 @@ void abs_exit(e_exit_code exit)
 		StopAllTasks();
 	}
 }
+//Error code 1: Not enough memory
 /** enumerations */
 
 /** structures */
