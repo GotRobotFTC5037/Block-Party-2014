@@ -10,16 +10,14 @@
 #ifndef ABS_JOYSTICK_DRIVE_H
 #define ABS_JOYSTICK_DRIVE_H
 
+#include "abs_teleop_utils.h"
 /** macros */
 //=======================================
 // joystick drive
 //=======================================
-void abs_joystick_drive()//int joy1,int joy2)
+void abs_joystick_drive(e_joystick_method joy_method)//int joy1,int joy2)
 {
-	e_joystick_method method = LINEAR;
-		if(joy1Btn(5)) method = LINEAR;
-		else if(joy1Btn(7)) method = COUGAR;
-
+	e_joystick_method method = joy_method;
 
 		int joy1 = joystick.joy1_y1;
 		int joy2 = joystick.joy1_y2;
@@ -30,7 +28,7 @@ void abs_joystick_drive()//int joy1,int joy2)
 		int j1 = abs(joy1);
 		int j2 = abs(joy2);
 
-		if(e_joystick_method == LINEAR)
+		if(method == LINEAR)
 		{
 
 			speed1 = j1*100/127;

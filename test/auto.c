@@ -40,7 +40,7 @@
 
 task main()
 {
-	waitforstart();
+	waitForStart();
 	abs_initialize_system();
 	abs_drive(FORWARD, E_DISTANCE, 100, 50);
 	abs_drive(BACKWARD, E_DISTANCE, 100, 50);
