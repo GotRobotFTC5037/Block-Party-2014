@@ -16,12 +16,13 @@ void abs_exit(e_exit_code exit)
 {
 	if (exit == NULL_POINTER)
 	{
-		PlayTone(4000, 050);
-		wait10Msec(050);
-		PlayTone(4000, 050);
-		wait10Msec(050);
-		PlayTone(4000, 050);
-		wait10Msec(050);
+		nxtDisplayString(2,"ERROR!!!");
+		nxtDisplayString(3,"ERROR CODE: 1");
+		nxtDisplayString(4,"NOT ENOUGH MEMORY!!!");
+		nxtDisplayString(5,"ADD MORE MEMORY OR ADD A");
+		nxtDisplayString(5,"WAY TO FREE MEMORY");
+		PlayTone(4000, 50);
+		wait10Msec(500);
 		StopAllTasks();
 	}
 }
