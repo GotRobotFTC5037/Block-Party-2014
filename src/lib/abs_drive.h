@@ -51,11 +51,11 @@ void abs_drive(e_drive_direction dir, e_stopping_method dist_method, int dist, i
 		}
 		//wait1Msec(dist);
 	}
-	else if(dist_method == E_DEGREES)  //encoder stopping method
+	else if(dist_method == E_ROTATIONS)  //encoder stopping method
 	{
 		while(i<5)
 		{
-			if(abs(nMotorEncoder(right_motor)) > dist)
+			if(abs(nMotorEncoder(right_motor)) > dist*360)
 				i++;
 			abs_gyro_drive(tcontext,speed);
 		}

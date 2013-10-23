@@ -32,7 +32,7 @@ typedef enum
 typedef enum
 {
 	E_TIME,
-	E_DEGREES,
+	E_ROTATIONS,
 	E_TILT,
 	E_DISTANCE
 } e_stopping_method; //will make a method with a tilt sensor(wheel in the middle of the robot
