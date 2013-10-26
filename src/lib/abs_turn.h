@@ -32,11 +32,11 @@ void abs_turn(e_direction dir, e_turn_method turn_method, int degree, int speed)
 	int i = 0;
 	//float rotSpeed = 0;
 	//float heading = 0;
-	turn_context* tcontext = 	(turn_context*)abs_get_mem(sizeof(turn_context));
+	move_context* tcontext = 	(move_context*)abs_get_mem(sizeof(move_context));
 
 	if(tcontext == NULL)
 	{
-		abs_report_error(NULL_POINTER);
+		abs_report_error(NULL_POINTER, EXIT);
 	}
 	tcontext->time = 0;
 	tcontext->heading = 0;

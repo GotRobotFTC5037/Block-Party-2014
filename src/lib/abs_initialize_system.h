@@ -27,14 +27,14 @@ void abs_initialize_system()
 	OpenWrite ( hFileHandle, nIoResult, sFileName, nFileSize);
 	if(nIoResult != 0)
 	{
-		abs_report_error(TEXT_FILE);
+		abs_report_error(TEXT_FILE, DONT_EXIT);
 	}
 	else
 	{
 		WriteFloat( hFileHandle, nIoResult, g_drift);
 		if(nIoResult != 0)
 		{
-			abs_report_error(TEXT_FILE);
+			abs_report_error(TEXT_FILE, DONT_EXIT);
 		}
 		else
 		{

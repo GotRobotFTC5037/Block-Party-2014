@@ -12,7 +12,7 @@
 
 /** macros */
 /** defines memory size */
-#define DYNAMIC_MEMORY_SIZE 40
+#define DYNAMIC_MEMORY_SIZE 80
 #define CALIBRATION_TIME 4000
 #define ANGLE_SENSOR_CIRCUMFERENCE 26
 #define JOYSTICK_METHOD NON_LINEAR

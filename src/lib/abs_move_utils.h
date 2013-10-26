@@ -21,7 +21,7 @@ typedef struct
 {
 	float heading;
 	int time;
-} turn_context;
+} move_context;
 
 typedef enum
 {
@@ -42,6 +42,12 @@ typedef enum
 	SWING,
 	POINT
 } e_turn_method;
+
+typedef enum
+{
+	EXIT,
+	DONT_EXIT
+} e_exit;
 
 #define distance_to_angle_derees(X) (X*360/ANGLE_SENSOR_CIRCUMFERENCE)
 #endif /* !ABS_TURN_UTILS */

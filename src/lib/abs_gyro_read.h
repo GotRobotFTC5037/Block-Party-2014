@@ -14,9 +14,7 @@
 #ifndef ABS_GYRO_READ_H
 #define ABS_GYRO_READ_H
 
-
-
-void abs_gyro_read (int GYRO, turn_context* tcontext)
+void abs_gyro_read (int GYRO, move_context* tcontext)
 {
 	float currtime;
 	float rawgyro = 0;

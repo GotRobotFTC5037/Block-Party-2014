@@ -16,12 +16,12 @@
 //=======================================
 // gyro drive
 //=======================================
-void abs_gyro_drive(turn_context* tcontext,int speed)
+void abs_gyro_drive(move_context* tcontext,int speed)
 {
 	int error = 0 - tcontext->heading;
 	//tcontext->heading) > degree
 
-	motor[left_motor] = speed - error;
-	motor[right_motor] = speed + error;
+	motor[left_motor] = speed + error;
+	motor[right_motor] = speed - error;
 }
 #endif /* !ABS_GYRO_DRIVE_H */

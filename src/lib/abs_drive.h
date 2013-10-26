@@ -26,7 +26,7 @@ void abs_drive(e_drive_direction dir, e_stopping_method dist_method, int dist, i
 	HTANGresetAccumulatedAngle(ANGLE_SENSOR);
 	int i = 0;
 	nMotorEncoder(right_motor)= 0;
-	turn_context* tcontext = 	(turn_context*)abs_get_mem(sizeof(turn_context));
+	move_context* tcontext = 	(move_context*)abs_get_mem(sizeof(move_context));
 	tcontext->time = 0;
 	tcontext->heading = 0;
 	abs_gyro_read(HTGYRO,tcontext);
