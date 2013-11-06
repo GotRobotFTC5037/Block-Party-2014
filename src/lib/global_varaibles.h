@@ -30,6 +30,9 @@ int smoke_run = false;
 int auto_missions = 4;
 int drive_heading = 0;
 
+bool Joy1Enabled = false;
+bool Joy2Enabled = false;
+
 //=============================================================
 // Define user configurable parameters
 //=============================================================
@@ -81,6 +84,7 @@ int screen_state = 1;
 #define e_gyro_cal 1
 #define e_gyro_mux 2
 #define e_sensor_mux 3
+#define e_joysticks 4
 
 int error = 0;
 
@@ -120,7 +124,7 @@ string error_list1 [] = {
 	"GyroCal ",
 	"Gyro    ",
 	"Sensor  ",
-	"Test 4  ",
+	"joystick",
 	"Test 5  ",
 	"Test 6  ",
 	"Test 7  ",
@@ -145,7 +149,7 @@ string error_list1 [] = {
 	"Failure ",
 	"Mux     ",
 	"Mux     ",
-	"Test 4  ",
+	"fail    ",
 	"Test 5  ",
 	"Test 6  ",
 	"Test 7  ",

@@ -32,17 +32,34 @@
 /*Includes*/
 
 #include "JoystickDriver.c"
+#include "lib/xander/hitechnic-sensormux.h"
+#include "lib/xander/hitechnic-irseeker-v2.h"
+#include "lib/xander/hitechnic-gyro.h"
+#include "lib/xander/hitechnic-angle.h"
 
+#include "lib/global_varaibles.h"
+#include "lib/abs_screen.h"
 #include "lib/abs_teleop_utils.h"
 #include "lib/abs_joystick_drive.h"
 #include "lib/abs_joystick_gunner.h"
-
+#include "lib/abs_tele_op_initialize.h"
 //========================================
 // Main program
 //========================================
 
 task main ()
 {
+	abs_tele_op_initialize();
+	if(!Joy1Enabled || !Joy2Enabled)
+	{
+		error = e_joysticks;
+		screen_state = s_error;
+		while(true)
+		{
+			PlayTone(20,200);
+			wait1Msec(500);
+		}
+	}
 	while(true)
 	{
 		abs_joystick_drive(LINEAR);
