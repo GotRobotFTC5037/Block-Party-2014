@@ -18,5 +18,6 @@
 #define MOCK_GYRO 0
 #define USE_TASK_PRIORITY 0
 #define CALIBRATE_GYROS_IN_SERIES 1
+#define CLASSIC_GYRO_READ 1
 
 #endif /* !COMPILE_FLAGS_H */

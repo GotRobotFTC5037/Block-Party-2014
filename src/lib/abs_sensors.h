@@ -17,7 +17,9 @@
 
 #include "math_utils.h"
 #include "abs_get_gyro_sensor_val.h"
-//#include "abs_log_multivalue.h"
+#include "abs_set_heading.h"
+
+#include "abs_log_multivalue.h"
 
 #define DRIFT_COMPENSATION_FACTOR 0.0070  // gyro units per second
 
@@ -25,7 +27,7 @@ task abs_sensors()
 {
 	g_prev_time = nPgmTime;
 	int raw_gyro1 = 0;
-  int raw_gyro2 = 0;
+	int raw_gyro2 = 0;
 
 	while(true)
 	{
@@ -125,32 +127,37 @@ task abs_sensors()
 
 		//if(DRIFT_COMPENSATION_FACTOR * ((g_curr_time - last_drift_compensation_time)/1000) >= 1)
 		//{
-			last_drift_compensation_time = g_curr_time;
-			drift_compensation = DRIFT_COMPENSATION_FACTOR * ((g_curr_time - last_drift_compensation_time)/1000);
+		last_drift_compensation_time = g_curr_time;
+		drift_compensation = DRIFT_COMPENSATION_FACTOR * ((g_curr_time - last_drift_compensation_time)/1000);
 		//}
 
 		// gyro 1
+		#if CLASSIC_GYRO_READ == 0
 		raw_gyro1 = abs_get_gyro_sensor_val(RAW,GYRO1);
-		g_rel_heading1 += ((raw_gyro1 - (g_gyro1_drift+(g_delta_drift*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation;
-		g_const_heading1 += ((raw_gyro1 - (g_gyro1_drift+(g_delta_drift*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation;
-//abs_log_multivalue(LIST1, g_rel_heading1);
+		abs_set_heading(RELATIVE, GYRO1, g_rel_heading1 + ((raw_gyro1 - (g_gyro1_drift+(g_delta_drift*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation);
+		abs_set_heading(CONSTANT, GYRO1, g_const_heading1 + ((raw_gyro1 - (g_gyro1_drift+(g_delta_drift*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation);
+		#else
+		abs_set_heading(RELATIVE, GYRO1, g_rel_heading1 + ((raw_gyro1 - g_gyro1_drift) * (float)(g_curr_time-g_prev_time)/1000));
+		abs_set_heading(CONSTANT, GYRO1, g_const_heading1 + ((raw_gyro1 - g_gyro1_drift) * (float)(g_curr_time-g_prev_time)/1000));
+		abs_log_multivalue(LIST1, g_rel_heading1);
+		#endif
 
 		// gyro 2
 		raw_gyro2 = abs_get_gyro_sensor_val(RAW,GYRO2);
-		g_rel_heading2 += ((raw_gyro2 - (g_gyro2_drift+(g_delta_drift2*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation;
-		g_const_heading2 += ((raw_gyro2 - (g_gyro2_drift+(g_delta_drift2*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation;
-//abs_log_multivalue(LIST2, g_rel_heading2);
+		abs_set_heading(RELATIVE, GYRO2, g_rel_heading2 + ((raw_gyro2 - (g_gyro2_drift+(g_delta_drift2*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation);
+		abs_set_heading(CONSTANT, GYRO2, g_const_heading2 + ((raw_gyro2 - (g_gyro2_drift+(g_delta_drift2*(float)(g_curr_time-g_prev_time)))) * (float)(g_curr_time-g_prev_time)/1000) + drift_compensation);
+		abs_log_multivalue(LIST2, g_rel_heading2);
 
 		//used gyro
 		if(g_gyro_use==GYRO1)
 		{
-			g_rel_heading_use = g_rel_heading1;
-			g_const_heading_use = g_const_heading1;
+			abs_set_heading(RELATIVE, SELECTED_GYRO, g_rel_heading1);
+			abs_set_heading(CONSTANT, SELECTED_GYRO, g_const_heading1);
 		}
 		else
 		{
-			g_rel_heading_use = g_rel_heading2;
-			g_const_heading_use = g_const_heading2;
+			abs_set_heading(RELATIVE, SELECTED_GYRO, g_rel_heading2);
+			abs_set_heading(CONSTANT, SELECTED_GYRO, g_const_heading2);
 		}
 
 		g_prev_time = g_curr_time;

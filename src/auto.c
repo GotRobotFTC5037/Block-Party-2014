@@ -66,7 +66,7 @@
 #include "lib/abs_dlog.h"
 #include "lib/abs_stay_on_ramp.h"
 #include "lib/abs_end_ramp.h"
-#include "lib/abs_reset_heading.h"
+#include "lib/abs_set_heading.h"
 
 
 //========================================

@@ -29,6 +29,7 @@
 #include "abs_reset_angle_sensor.h"
 #include "abs_get_angle_sensor_val.h"
 #include "abs_move_utils.h"
+#include "abs_reset_heading.h"
 
 void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int dist, int speed, bool stop_at_end, e_drive_type drive_type)
 {
@@ -60,6 +61,7 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	}
 	int i = 0;
 	nMotorEncoder(right_motor)= 0;
+	abs_reset_heading(RELATIVE);
 
 	//------------------------
 	// time stopping method
@@ -385,7 +387,7 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 		if(g_start_point==1)
 		{
 			if(g_end_point == 3) g_dist_backwards = abs_get_angle_sensor_val(RELATIVE_BPU) - 6;//was 9
-			else if(g_end_point == 2) g_dist_backwards = 190 - abs_get_angle_sensor_val(RELATIVE_BPU);
+			else if(g_end_point == 2) g_dist_backwards = 200 - abs_get_angle_sensor_val(RELATIVE_BPU);
 		}
 		else if(g_start_point==2)
 		{

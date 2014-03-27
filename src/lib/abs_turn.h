@@ -19,7 +19,7 @@
 #define ABS_TURN_H
 
 #include "abs_dlog.h"
-#include "abs_reset_heading.h"
+#include "abs_set_heading.h"
 
 /** macros */
 

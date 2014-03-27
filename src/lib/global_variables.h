@@ -187,7 +187,7 @@ const int g_flag_speed_left = -20;
 const int g_abdd_up = 10;
 const int g_abdd_down = 235;
 
-const int g_gyro_adjust = 3;
+const int g_gyro_adjust = 5; //was 3;
 int g_original_gyro_val1 = 0;
 int g_original_gyro_val2 = 0;
 
@@ -352,7 +352,9 @@ typedef enum
 typedef enum
 {
 	GYRO1,
-	GYRO2
+	GYRO2,
+	ALL_GYROS,
+	SELECTED_GYRO
 } e_gyro_names;
 e_gyro_names g_gyro_use = GYRO1;
 
@@ -465,7 +467,7 @@ const int g_backwards_crate4_to_turn_dist = 140;
 #define MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE 110
 #define MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE 20
 
-#define DRIVE_DIST_TO_OPP_RAMP_SIDE 170
+#define DRIVE_DIST_TO_OPP_RAMP_SIDE 165
 
 #define FORWARD_IR_THRESHOLD 7
 #define BACKWARD_IR_THRESHOLD 3
@@ -711,7 +713,7 @@ typedef enum
 * @var g_em_first_turn_type
 *		Tells the robot the the first turn of the end of auto
 */
-e_turn_types g_em_first_turn_type = RELATIVE_TURN;
+e_turn_types g_em_first_turn_type = CONSTANT_TURN;
 
 /**
 * @var g_em_second_turn_type
@@ -725,7 +727,7 @@ e_turn_types g_em_first_turn_type = RELATIVE_TURN;
 * @var g_drive_type
 *		Tells the robot if it should drive useing the gyro, encode or non
 */
-e_turn_types g_em_second_turn_type = CONSTANT_TURN;
+e_turn_types g_em_second_turn_type = RELATIVE_TURN;
 
 int g_selection_turn = 1;
 

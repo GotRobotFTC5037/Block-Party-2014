@@ -22,6 +22,7 @@
 #include "abs_mission_to_turn_amount.h"
 #include "abs_lift_block_lifter.h"
 #include "global_variables.h"
+#include "abs_reset_heading.h"
 
 void abs_end_ramp(int delay)
 {
@@ -60,6 +61,8 @@ void abs_end_ramp(int delay)
 
 	wait1Msec(200);
 	servo[EOPD_servo] = EOPD_SERVO_DOWN;	//and lower the EOPD sensor into position
+
+	abs_reset_heading(RELATIVE_CONSTANT);
 
 	if(g_good_gyro && g_em_first_turn_type == CONSTANT_TURN)	//if the gyro is detected as good and 1st turn sub
 	{																																				//menu option is selected as true use const turn
@@ -108,12 +111,12 @@ void abs_end_ramp(int delay)
 		if(g_end_point == 2)	//if end point is ramp 1 turn to the left so grabbers drive first
 		{
 			abs_dlog(__FILE__ ,"Turn 2: bad gyro");
-			abs_turn(COUNTERCLOCKWISE, POINT, TURN, 90, end_program_drive_speed);
+			abs_turn(COUNTERCLOCKWISE, POINT, TURN, 87, 40);//end_program_drive_speed);
 		}
 		else	//else: if end point is ramp 2 turn to the left so grabbers drive first
 		{
 			abs_dlog(__FILE__ ,"Turn 2: bad gyro");
-			abs_turn(CLOCKWISE, POINT, TURN, 90, end_program_drive_speed);
+			abs_turn(CLOCKWISE, POINT, TURN, 87, 40);//end_program_drive_speed);
 		}
 	}
 	/** before entering the ramp, pause for the requested time */
