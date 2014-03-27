@@ -85,7 +85,9 @@ task main()
 				while(nNxtButtonPressed==kRightButton){}
 			}
 		}
+		PlaySoundFile("! Click.rso");
 		while(nNxtButtonPressed==kEnterButton){}
 		abs_smoke_execute(test_num);
+		abs_smoke_test_view(test_num,test_value1,test_value2);
 	}
 }
