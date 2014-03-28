@@ -22,7 +22,7 @@
 #include "abs_mission_to_turn_amount.h"
 #include "abs_lift_block_lifter.h"
 #include "global_variables.h"
-#include "abs_reset_heading.h"
+#include "abs_set_heading.h"
 
 void abs_end_ramp(int delay)
 {

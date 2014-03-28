@@ -29,7 +29,7 @@
 #include "abs_reset_angle_sensor.h"
 #include "abs_get_angle_sensor_val.h"
 #include "abs_move_utils.h"
-#include "abs_reset_heading.h"
+#include "abs_set_heading.h"
 
 void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int dist, int speed, bool stop_at_end, e_drive_type drive_type)
 {
