@@ -93,7 +93,7 @@ void abs_end_ramp(int delay)
 	StartTask(abs_lift_block_lifter);		//start the screen function, this handels all screen interactions
 #endif
 
-	if(g_good_gyro && g_em_first_turn_type == CONSTANT_TURN)//if the gyro is detected as good and 1st turn sub
+	if(g_good_gyro && g_em_second_turn_type == CONSTANT_TURN)//if the gyro is detected as good and 1st turn sub
 	{																																				//menu option is selected as true use const turn
 		if(g_end_point == 2)	//if end point is ramp 1 turn to the left so grabbers drive first
 		{
