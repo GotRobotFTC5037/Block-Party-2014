@@ -19,10 +19,21 @@
 
 #include "compile_flags.h"
 
+/**
+* @def HIGH_PRIORITY_TASK
+*	`	Tells the robot the value of a high priority task
+*	@def MEDIUM_PRIORITY_TASK
+*		Tells the rbot the value of a medium priority task
+*	@def LOW_PRIORITY_TASK
+*		Tells fhe robot the value of a low priority talk
+* @def BACKGROUND_TASK
+*
+*/
 #define HIGH_PRIORITY_TASK 5
 #define MEDIUM_PRIORITY_TASK 5
 #define LOW_PRIORITY_TASK 5
 #define BACKGROUND_TASK 5
+
 
 const tMUXSensor HTEOPD = msensor_S2_1;
 const tMUXSensor HTIRS2 = msensor_S2_3;
