@@ -1,16 +1,14 @@
 /**
 *
-*  @file abs_turn.h
+*  @file abs_set_heading.h
 *
-*  @brief The header file that alows you to do a point turn
+*  @brief Resets the gyros heading
 *
-*  @param degree Tells the robot how much to turn
+*  @param gyro_to_set Tell the robot what gyro to reset
 *
-*  @param dir Tells the robot what way to turn
+*	 @param type Tells the robot the return type
 *
-*  @param speed Tells the robot how fast to turn
-*
-*  @return Returns nothing
+*  @return Returns if the function has failed or not
 *
 *  @copyright Copyright 2013, Got Robot? FTC Team 5037
 *
