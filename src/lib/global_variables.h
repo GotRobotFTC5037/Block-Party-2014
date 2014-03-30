@@ -201,6 +201,11 @@ const int g_optical_threshold = 30;
 
 const int g_optical_move_min_dist = 70;
 
+#define NON_IR_DRIVE_SPEED 80
+#define IR_DRIVE_SPEED 40
+
+#define TURN_SPEED 50
+
 //=========================================================
 // auto selection points
 //=========================================================
@@ -584,9 +589,12 @@ float g_delta_drift = 0;
 int g_debug_time_1 = 0;
 int g_debug_time_2 = 0;
 
+
+int g_quick_mission = 1;
+int g_max_quick_missions = 6;
 int g_auto_ending_points = 9;
 int g_travel_dist = 0;
-int g_auto_starting_points = 4;
+int g_auto_starting_points = 6;
 int g_auto_missions = 10;
 int g_drive_heading = 0;
 int g_ir_heading = 5;
@@ -613,7 +621,7 @@ int g_selection_value = 0;
 */
 
 #define MIN_DRIVE_SPEED 10
-#define MIN_TURN_SPEED 10
+#define MIN_TURN_SPEED 25
 #define DRIVE_SPEED_PERCENTAGE_DROP 50
 #define DRIVE_SPEED_COEFFICIENT 5
 #define TURN_SPEED_PERCENTAGE_DROP 50
@@ -763,7 +771,7 @@ int START_POINT_MAX_VAL = 4;
 int START_POINT_MIN_VAL = 0;
 
 int g_number_min_limit [] = {0,0,0,0,0,0,0};
-int g_number_max_limit [] = {0,4,30,7,30,9};
+int g_number_max_limit [] = {0,6,30,7,30,9};
 //=============================================================
 // Gyro variables
 //=============================================================
@@ -965,360 +973,3 @@ typedef enum
 } e_error_types;
 
 e_error_types g_error_type = ERROR_LETHAL;
-
-//==============================================================================
-// Define the text to be displayed for each starting point line 1
-//==============================================================================
-/**
-* @var g_starting_names1
-*		Tell the robot the names of the starting points
-*/
-
-string g_starting_names1 [] = {
-	"        ",
-	"S1      ",
-	"S2      ",
-	"S3      ",
-	"S4      ",
-	"Test 5  ",
-	"Test 6  ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for each starting point line 2
-//==============================================================================
-/**
-* @var g_starting_names2
-*		Tell the robot the names of the second line of the screen when selectimg a starting posion
-*/
-
-string g_starting_names2 [] = {
-	"        ",
-	"        ",
-	"Test 2  ",
-	"Test 3  ",
-	"Test 4  ",
-	"Test 5  ",
-	"Test 6  ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for each ending point line 1
-//==============================================================================
-/**
-* @var g_ending_names1
-*		 Tells the robot the names of the end points
-*/
-
-string g_ending_names1 [] = {
-	"        ",
-	"Stop    ",
-	"Ramp 1  ",
-	"Ramp 2  ",
-	"Ramp 1  ",
-	"Ramp 2  ",
-	"Test 6  ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for each ending point line 2
-//==============================================================================
-/**
-* @var g_ending_names2
-*		 Tells the robot the names of the second line of the end points
-*/
-string g_ending_names2 [] = {
-	"        ",
-	"        ",
-	"Stop    ",
-	"Stop    ",
-	"Continue",
-	"Continue",
-	"Test 6  ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for each mission
-//==============================================================================
-/**
-* @var g_mission_names1
-*		Tells the robot the names of the missions
-*/
-string g_mission_names1 [] = {
-	"        ",
-	"IR crate",
-	"crate 4 ",
-	"crate 3 ",
-	"crate 2 ",
-	"crate 1 ",
-	"defence ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed on the second line for each mission
-//==============================================================================
-/**
-* @var g_mission_names2
-*		Tells the robot the second line of the mission
-*/
-string g_mission_names2 [] = {
-	"        ",
-	"Test 1  ",
-	"Test 2  ",
-	"Test 3  ",
-	"Test 4  ",
-	"Test 5  ",
-	"score 4 ",
-	"score 3 ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for quick selection
-//==============================================================================
-/**
-* @var g_quick_names1
-*		 Tells the robot the quick select program names
-*/
-
-string g_quick_names1 [] = {
-	"Unknown ",
-	"Standard",
-	"S Ramp 2",
-	"Test 3  ",
-	"Test 4  ",
-	"Test 5  ",
-	"Test 6  "};
-
-/**
-* @var g_quick_names2
-*		 Tells the robot the quick select program second line names
-* @var g_quick_mission
-*		Tells the robot the numbers of the quick missions
-* @var g_max_quick_missions
-*		Tells the robot the max amount of quick names
-*/
-string g_quick_names2 [] = {
-	"Unknown ",
-	"10142   ",
-	"10143   ",
-	"Test 3  ",
-	"Test 4  ",
-	"Test 5  ",
-	"Test 6  "};
-
-int g_quick_mission = 1;
-int g_max_quick_missions = 6;
-
-//==============================================================================
-// Define the text to be displayed for the errors
-//==============================================================================
-/**
-* @var g_error_list1
-*		 Tells the robot the names of the errors
-*/
-string g_error_list1 [] = {
-	"Unknown ",
-	"GyroCal ",
-	"Gyro    ",
-	"Sensor  ",
-	"joystick",
-	"Test 5  ",
-	"Test 6  ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-/**
-* @var g_error_list2
-*		Tells the robot the names of the errors for the second line
-*/
-
-string g_error_list2 [] = {
-	"error   ",
-	"Failure ",
-	"Mux     ",
-	"Mux     ",
-	"fail    ",
-	"Test 5  ",
-	"Test 6  ",
-	"Test 7  ",
-	"Test 8  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for smoke test line 1
-//==============================================================================
-/**
-* @var g_smoke_test1
-*		Tells the robot the names of the smake test options
-*/
-string g_smoke_test1 [] = {
-	"Unknown ",
-	"Jolly   ",
-	"Drive   ",
-	"Sensor  ",
-	"Block   ",
-	"Grabbers",
-	"sky hook",
-	"roger   ",
-	"ground  ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};
-
-//==============================================================================
-// Define the text to be displayed for smoke test line 2
-//==============================================================================
-/**
-* @var g_smoke_test2
-*		Tells the robot the names of the smake test options for the second line
-*/
-string g_smoke_test2 [] = {
-	"Unknown ",
-	"Roger   ",
-	"Train   ",
-	"Sensor  ",
-	"Lift    ",
-	"        ",
-	"        ",
-	"slide   ",
-	"arm     ",
-	"Test 9  ",
-	"Test 10 ",
-	"Test 11 ",
-	"Test 12 ",
-	"Test 13 ",
-	"Test 14 ",
-	"Test 15 ",
-	"Test 16 ",
-	"Test 17 ",
-	"Test 18 ",
-	"Test 19 ",
-	"Test 20 ",
-	"Test 21 ",
-	"Test 22 "};

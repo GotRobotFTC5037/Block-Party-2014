@@ -29,42 +29,40 @@ void abs_s1_mission_execute()
 	switch(g_mission_number)
 	{
 	case 0:
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/600, 50, true, GYRO);
 		break;
 
 	case 1:
 		dist_record=true;
-		abs_drive(FORWARD, E_IR_DETECT, 7, 40, true, GYRO);
+		abs_drive(FORWARD, E_IR_DETECT, 7, IR_DRIVE_SPEED, true, GYRO);
 		if(abs_get_angle_sensor_val(RELATIVE_BPU) < 38)
 		{
 			dist_record = true;
-			abs_drive(FORWARD, E_ANGLE, 40 - abs_get_angle_sensor_val(RELATIVE_BPU), 40, true, GYRO);
+			abs_drive(FORWARD, E_ANGLE, 40 - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
 		}
 		PlayTone(200,20);
-		wait1Msec(1000);
 		wait1Msec(500);
 		break;
 
 	case 2:
 		dist_record=true;
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/150, 50, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/150, NON_IR_DRIVE_SPEED, true, GYRO);
 
 		wait1Msec(2000);
 		break;
 
 	case 3:
 		dist_record=true;
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/125, 50, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/125, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
 	case 4:
 		dist_record=true;
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/75, 50, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/75, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
 	case 5:
 		dist_record=true;
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/50, 50, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/50, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
 	case 6:
@@ -77,40 +75,25 @@ void abs_s1_mission_execute()
 	case 7:
 		abs_turn(COUNTERCLOCKWISE, POINT, TURN, 98, 60);
 		wait1Msec(200);
-		abs_drive(FORWARD, E_ANGLE, 87, 50, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, 87, NON_IR_DRIVE_SPEED, true, GYRO);
 		motor[block_lift_motor] = 40;
 		motor[block_lift_motor2] = 40;
 		abs_turn(CLOCKWISE, POINT, TURN, 103, 60);
 		motor[block_lift_motor] = 0;
 		motor[block_lift_motor2] = 0;
-		abs_drive(FORWARD, E_ANGLE, 80, 50, true, GYRO);
-		break;
-
-	case 140:
-		int dist = 30;
-		bool done = false;
-		while(done == false)
-		{
-			int ac_start_time = nPgmTime;
-			int i = 0;
-			while((g_accelermoeter_sensor < dist+5) && (g_accelermoeter_sensor > dist-5) && ((ac_start_time - nPgmTime)<500))
-			{
-				i++;
-				PlayTone(20,20);
-				wait1Msec(1);
-			}
-			if(i > 490) done = true;
-			PlayTone(20,20);
-		}
+		abs_drive(FORWARD, E_ANGLE, 80, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 	}
-	abs_dlog(__FILE__,"abdd up");
-	servo[abdd] = g_abdd_up;
-	StartTask (abs_calibrate_optical);
-	wait1Msec(2000);
-	servoChangeRate[abdd] = 10;
-	servo[abdd] = g_abdd_down;
-	abs_dlog(__FILE__,"abdd down");
+	if(g_mission_number != 0)
+	{
+		abs_dlog(__FILE__,"abdd up");
+		servo[abdd] = g_abdd_up;
+		StartTask (abs_calibrate_optical);
+		wait1Msec(2000);
+		servoChangeRate[abdd] = 10;
+		servo[abdd] = g_abdd_down;
+		abs_dlog(__FILE__,"abdd down");
+	}
 
 	wait1Msec(g_end_delay * DELAY_MULTIPLICATION_FACTOR);
 	wait1Msec(100);

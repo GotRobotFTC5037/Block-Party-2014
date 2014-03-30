@@ -85,11 +85,16 @@ void abs_s3_mission_execute()
 	case 7:
 		break;
 	}
-	abs_dlog(__FILE__,"abdd up");
-	servo[abdd] = g_abdd_up;
-	wait1Msec(2000);
-	servo[abdd] = g_abdd_down;
-	abs_dlog(__FILE__,"abdd down");
+	if(g_mission_number != 0)
+	{
+		abs_dlog(__FILE__,"abdd up");
+		servo[abdd] = g_abdd_up;
+		StartTask (abs_calibrate_optical);
+		wait1Msec(2000);
+		servoChangeRate[abdd] = 10;
+		servo[abdd] = g_abdd_down;
+		abs_dlog(__FILE__,"abdd down");
+	}
 
 	wait1Msec(g_end_delay * DELAY_MULTIPLICATION_FACTOR);
 	wait1Msec(100);

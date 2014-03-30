@@ -37,18 +37,34 @@ void abs_end_ramp(int delay, int lift_speed)
 	wait1Msec(delay);
 	servo[abdd] = g_abdd_down;
 
+	if(g_mission_number==0&&(g_start_point==1||g_start_point==2))
+	{
+		if(g_start_point==1)
+		{
+			if(g_end_point == 2) {g_to_turn_dist = 190;}
+			else if(g_end_point == 3) {g_to_turn_dist = 6;}
+		}
+		else
+		{
+			if(g_end_point == 2) {g_to_turn_dist = 5;}
+			else if(g_end_point == 3) {g_to_turn_dist = 196;}
+		}
+	}
+
 	if(g_end_point == 2)
 	{
 		abs_dlog(__FILE__ ,"drive to ramp 1");
-		abs_drive(FORWARD, E_ANGLE, g_to_turn_dist, 50, true, GYRO);
+		if(g_mission_number==0&&g_start_point==2) abs_drive(BACKWARD, E_ANGLE, g_to_turn_dist, 50, true, GYRO);
+		else abs_drive(FORWARD, E_ANGLE, g_to_turn_dist, 50, true, GYRO);
 	}
 	else
 	{
 		abs_dlog(__FILE__ ,"drive to ramp 2");
-		abs_drive(BACKWARD, E_ANGLE, g_to_turn_dist, 50, true, GYRO);
+		if(g_mission_number==0&&g_start_point==1) abs_drive(FORWARD, E_ANGLE, g_to_turn_dist, 50, true, GYRO);
+		else abs_drive(BACKWARD, E_ANGLE, g_to_turn_dist, 50, true, GYRO);
 	}
 
-	if(abs_get_angle_sensor_val(RELATIVE_BPU) < 5)//15)
+	if(abs_get_angle_sensor_val(RELATIVE_BPU) < 5 && g_mission_number !=0)
 	{
 		abs_dlog(__FILE__,"dist fail","rel BPU", abs_get_angle_sensor_val(RELATIVE_BPU));
 		motor[left_motor] = 0;

@@ -81,7 +81,8 @@ void abs_smoke_execute(int test_num)
 				while(nNxtButtonPressed==kRightButton){}
 			}
 			abs_smoke_test_view(test_num,0,0);
-			motor[sky_hook] = 0;
+			motor[right_motor] = 0;
+			motor[left_motor] = 0;
 			break;
 		case 4:
 			static int left_grabber = 0;

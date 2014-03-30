@@ -102,6 +102,7 @@ void abs_selection_program()
 	PlaySoundFile("! Click.rso");
 	while(nNxtButtonPressed == kEnterButton){}
 	eraseDisplay();
+	for(int i=1;i<6;i++)abs_dlog(__FILE__ ,"","",g_input_array[i]);
 }
 
 #endif /* !ABS_SELECTION_PROGRAM_H */

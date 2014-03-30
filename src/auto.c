@@ -52,6 +52,8 @@
 #include "lib/abs_s2_mission_execute.h"
 #include "lib/abs_s3_mission_execute.h"
 #include "lib/abs_s4_mission_execute.h"
+#include "lib/abs_s5_mission_execute.h"
+#include "lib/abs_s6_mission_execute.h"
 #include "lib/abs_dlog.h"
 #include "lib/abs_end_ramp.h"
 #include "lib/abs_stay_on_ramp.h"
@@ -72,18 +74,12 @@ task main()
 	g_const_heading = 0;
 	switch(g_start_point)
 	{
-	case 1:
-		abs_s1_mission_execute();
-		break;
-	case 2:
-		abs_s2_mission_execute();
-		break;
-	case 3:
-		abs_s3_mission_execute();
-		break;
-	case 4:
-		abs_s4_mission_execute();
-		break;
+	case 1: abs_s1_mission_execute(); break;
+	case 2: abs_s2_mission_execute(); break;
+	case 3: abs_s3_mission_execute(); break;
+	case 4: abs_s4_mission_execute(); break;
+	case 5: abs_s5_mission_execute(); break;
+	case 6: abs_s6_mission_execute(); break;
 	}
 
 	g_const_heading = 0;
@@ -96,7 +92,7 @@ task main()
 		break;
 	case 2:
 	case 3:
-		abs_end_ramp(2000,40);
+		abs_end_ramp(500,40);
 		break;
 	default:
 		abs_dlog(__FILE__,"Invalid Ramp Option");

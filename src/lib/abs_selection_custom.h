@@ -86,11 +86,11 @@ void abs_selection_custom()
 		{
 			PlaySoundFile("! Click.rso");
 			while(nNxtButtonPressed == kLeftButton){}
-			if(g_input_array[SCOREING_POINT] > 0) g_input_array[SCOREING_POINT]--;
+			if(g_input_array[SCOREING_POINT] > -1) g_input_array[SCOREING_POINT]--;
 		}
 		switch(g_input_array[SCOREING_POINT])
 		{
-		case 0: abs_cscreen("Scoring ","point   ","ERROR   "); break;
+		case 0: abs_cscreen("Scoring ","point   ","NO CRATE"); break;
 		case 1: abs_cscreen("Scoring ","point   ","IR      "); break;
 		case 2: abs_cscreen("Scoring ","point   ","CRATE 4 "); break;
 		case 3: abs_cscreen("Scoring ","point   ","CRATE 3 "); break;
