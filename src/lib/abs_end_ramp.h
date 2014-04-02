@@ -46,7 +46,7 @@ void abs_end_ramp(int delay, int lift_speed)
 		}
 		else
 		{
-			if(g_end_point == 2) {g_to_turn_dist = 5;}
+			if(g_end_point == 2) {g_to_turn_dist = 3;}
 			else if(g_end_point == 3) {g_to_turn_dist = 196;}
 		}
 	}
@@ -82,7 +82,7 @@ void abs_end_ramp(int delay, int lift_speed)
 	if(g_good_gyro && g_em_first_turn_type == CONSTANT_TURN)
 	{
 		abs_dlog(__FILE__ ,"first turn: good gyro");
-		abs_turn(COUNTERCLOCKWISE, POINT, TURN_TO, abs_mission_to_turn_amount(g_start_point, g_end_point, g_good_gyro), 40);//was 60
+		abs_turn(COUNTERCLOCKWISE, POINT, TURN_TO, abs_mission_to_turn_amount(g_start_point, g_end_point, true/*g_good_gyro*/), 40);//was 60
 	}
 	else
 	{
@@ -92,16 +92,17 @@ void abs_end_ramp(int delay, int lift_speed)
 
 	wait1Msec(g_input_array[CORNOR_DELAY]*DELAY_MULTIPLICATION_FACTOR);
 	wait1Msec(200);
-	abs_drive(FORWARD, E_OPTICAL, 110, 30, true, GYRO);
-	//if(abs_get_angle_sensor_val(RELATIVE_BPU) < 20)
-	//{
-	//	abs_drive(FORWARD, E_ANGLE, 110 - abs_get_angle_sensor_val(RELATIVE_BPU), 30, true, GYRO);
-	//}
+	abs_drive(FORWARD, E_OPTICAL, 105, 30, true, GYRO);
+	if(abs_get_angle_sensor_val(RELATIVE_BPU) < 80)
+	{
+		if(g_mission_number!=0)abs_drive(FORWARD, E_ANGLE, 102 - abs_get_angle_sensor_val(RELATIVE_BPU), 30, true, GYRO);
+		else abs_drive(FORWARD, E_ANGLE, 105 - abs_get_angle_sensor_val(RELATIVE_BPU), 30, true, GYRO);
+	}
 	if(g_auto_sub_selection_ramp_side == SUB_SELECTION_RAMP_OPP_SIDE)
 	{
 		servo[optical_servo] = OPTICAL_SERVO_DOWN;
 		abs_drive(FORWARD, E_ANGLE, DRIVE_DIST_TO_OPP_RAMP_SIDE - abs_get_angle_sensor_val(RELATIVE_BPU), 30, false, GYRO);
-		abs_drive(FORWARD, E_OPTICAL, 25, 30, true, GYRO);
+		abs_drive(FORWARD, E_OPTICAL, 24, 30, true, GYRO);
 	}
 
 	abs_control_light_sensor(INACTIVE);
@@ -113,23 +114,27 @@ void abs_end_ramp(int delay, int lift_speed)
 		if(g_end_point == 2)
 		{
 			abs_dlog(__FILE__ ,"second turn: good gyro");
-			abs_turn(COUNTERCLOCKWISE, POINT, TURN_TO, 180, 40);//was 60
+			if(g_auto_sub_selection_ramp_side == SUB_SELECTION_RAMP_ALLY_SIDE) abs_turn(COUNTERCLOCKWISE, POINT, TURN_TO, 183, 40);//was 60
+			else	abs_turn(COUNTERCLOCKWISE, POINT, TURN_TO, 187, 40);//was 60
 		}
 		else
 		{
 			abs_dlog(__FILE__ ,"second turn: bad gyro");
-			abs_turn(CLOCKWISE, POINT, TURN_TO, 0, 40);//was 50
+			if(g_auto_sub_selection_ramp_side == SUB_SELECTION_RAMP_ALLY_SIDE) abs_turn(CLOCKWISE, POINT, TURN_TO, 357, 40);//was 50
+			else abs_turn(CLOCKWISE, POINT, TURN_TO, 355, 40);//was 50
 		}
 	}
 	else
 	{
 		if(g_end_point == 2)
 		{
-			abs_turn(COUNTERCLOCKWISE, POINT, TURN, 90, 60);
+			if(g_auto_sub_selection_ramp_side == SUB_SELECTION_RAMP_ALLY_SIDE) abs_turn(COUNTERCLOCKWISE, POINT, TURN, 87, 60);
+			else abs_turn(COUNTERCLOCKWISE, POINT, TURN, 85, 60);
 		}
 		else
 		{
-			abs_turn(CLOCKWISE, POINT, TURN, 90, 50);
+			if(g_auto_sub_selection_ramp_side == SUB_SELECTION_RAMP_ALLY_SIDE) abs_turn(CLOCKWISE, POINT, TURN, 85, 50);
+			else abs_turn(CLOCKWISE, POINT, TURN, 87, 50);
 		}
 	}
 	/** before entering the ramp, pause for the requested time */

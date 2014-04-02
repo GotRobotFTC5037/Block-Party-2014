@@ -93,6 +93,42 @@ void abs_selection_options()
 	}
 	PlaySoundFile("! Click.rso");
 	while(nNxtButtonPressed == kEnterButton){}
+	//---------------------------------------
+	// IR partial selection
+	//---------------------------------------
+	static int j = 1;
+	while(nNxtButtonPressed != kEnterButton)
+	{
+		if(nNxtButtonPressed == kRightButton)
+		{
+			PlaySoundFile("! Click.rso");
+			while(nNxtButtonPressed == kRightButton){}
+			if(j<3) j++;
+		}
+		if(nNxtButtonPressed == kLeftButton)
+		{
+			PlaySoundFile("! Click.rso");
+			while(nNxtButtonPressed == kLeftButton){}
+			if(j>1) j--;
+		}
+		if(j==1)
+		{
+			g_auto_sub_selection_IR_partial = SUB_SELECTION_IR_ALL;
+			abs_cscreen("IR      ","partial ","ALL     ");
+		}
+		else if(j==2)
+		{
+			g_auto_sub_selection_IR_partial = SUB_SELECTION_IR_1_2;
+			abs_cscreen("IR      ","partial ","1 & 2   ");
+		}
+		else
+		{
+			g_auto_sub_selection_IR_partial = SUB_SELECTION_IR_3_4;
+			abs_cscreen("IR      ","partial ","3 & 4   ");
+		}
+	}
+	PlaySoundFile("! Click.rso");
+	while(nNxtButtonPressed == kEnterButton){}
 }
 
 #endif /* !ABS_SELECTION_OPTIONS_H */

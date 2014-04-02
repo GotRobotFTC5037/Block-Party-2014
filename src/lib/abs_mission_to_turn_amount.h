@@ -23,11 +23,11 @@ int abs_mission_to_turn_amount(int starting_point, int ramp_position, bool good_
 		case 2:
 			if(ramp_position == 2)
 			{
-				return 275;
+				return 277;
 			}
 			else
 			{
-				return 265;
+				return 268;
 			}
 		case 3:
 			return 315;
@@ -41,11 +41,11 @@ int abs_mission_to_turn_amount(int starting_point, int ramp_position, bool good_
 	{
 		if(ramp_position == 2)
 		{
-			return 85;
+			return 83;
 		}
 		else
 		{
-			return 95;
+			return 88;
 		}
 	}
 }

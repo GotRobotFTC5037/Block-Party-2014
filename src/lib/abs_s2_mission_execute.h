@@ -33,11 +33,16 @@ void abs_s2_mission_execute()
 		dist_record=true;
 		abs_drive(BACKWARD, E_IR_DETECT, 3, IR_DRIVE_SPEED, true, GYRO);
 		g_shift_due_to_ir = true;
-		if(abs_get_angle_sensor_val(RELATIVE_BPU) < 38)
+		int min_dist = 38;
+		if((g_start_point==1&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_3_4)||(g_start_point==2&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_1_2)) min_dist = 125;
+		if(abs_get_angle_sensor_val(RELATIVE_BPU) < min_dist)
 		{
+			int to_crate = 40;
+			if((g_start_point==1&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_3_4)||(g_start_point==2&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_1_2)) to_crate = 125;
+
+			g_reset_angle_record = false;
 			dist_record = true;
-			//g_shift_due_to_ir = false;
-			abs_drive(BACKWARD, E_ANGLE, 40 - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
+			abs_drive(FORWARD, E_ANGLE, to_crate - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
 		}
 		//Only use g_shift_due_to_ir when shifted due the the ir detecting
 		PlayTone(200,20);

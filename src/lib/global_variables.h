@@ -201,7 +201,7 @@ const int g_optical_threshold = 30;
 
 const int g_optical_move_min_dist = 70;
 
-#define NON_IR_DRIVE_SPEED 80
+#define NON_IR_DRIVE_SPEED 70
 #define IR_DRIVE_SPEED 40
 
 #define TURN_SPEED 50
@@ -350,6 +350,15 @@ typedef enum
 
 e_auto_sub_selection_ramp_sides g_auto_sub_selection_ramp_side = SUB_SELECTION_RAMP_ALLY_SIDE;
 
+typedef enum
+{
+	SUB_SELECTION_IR_ALL,
+	SUB_SELECTION_IR_1_2,
+	SUB_SELECTION_IR_3_4
+} e_auto_sub_selection_IR_partial_types;
+
+e_auto_sub_selection_IR_partial_types g_auto_sub_selection_IR_partial = SUB_SELECTION_IR_ALL;
+
 /**
 *  @enum e_auto_sub_selection_ramp Tells the robot to drive onto the ramp and continue or stop
 *  @var e_auto_sub_selection_ramp::SUB_SELECTION_RAMP_STOP
@@ -494,10 +503,12 @@ const int g_backwards_crate4_to_turn_dist = 140;
 #define MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE 110
 #define MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE 20
 
-#define DRIVE_DIST_TO_OPP_RAMP_SIDE 145
+#define DRIVE_DIST_TO_OPP_RAMP_SIDE 142
 
 #define FORWARD_IR_THRESHOLD 7
 #define BACKWARD_IR_THRESHOLD 3
+
+bool g_reset_angle_record = true;
 
 //=========================================================
 // auto number input variable
@@ -621,7 +632,7 @@ int g_selection_value = 0;
 */
 
 #define MIN_DRIVE_SPEED 10
-#define MIN_TURN_SPEED 25
+#define MIN_TURN_SPEED 15
 #define DRIVE_SPEED_PERCENTAGE_DROP 50
 #define DRIVE_SPEED_COEFFICIENT 5
 #define TURN_SPEED_PERCENTAGE_DROP 50
@@ -750,7 +761,7 @@ e_turn_types g_em_first_turn_type = CONSTANT_TURN;
 * @var g_drive_type
 *		Tells the robot if it should drive useing the gyro, encode or non
 */
-e_turn_types g_em_second_turn_type = RELATIVE_TURN;
+e_turn_types g_em_second_turn_type = CONSTANT_TURN;
 
 int g_selection_turn = 1;
 
