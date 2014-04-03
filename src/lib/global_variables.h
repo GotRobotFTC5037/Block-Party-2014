@@ -383,6 +383,18 @@ typedef enum
 	SUB_SELECTION_IR_3_4
 } e_auto_sub_selection_IR_partial_types;
 
+/**
+* @enum e_auto_sub_selection_IR_partial_types Tells the robot what IR section to do
+* @var e_auto_sub_selection_IR_partial_types::SUB_SELECTION_IR_ALL
+*		Tells the robot the search for IR in all of the points
+* @var e_auto_sub_selection_IR_partial_types::SUB_SELECTION_IR_1_2
+*		Tells the robot to search for IR in point 1 and 2
+* @var e_auto_sub_selection_IR_partial_types::SUB_SELECTION_IR_3_4
+*		Tells the robot to search for IR in point 3 and 4
+*
+* @var g_auto_sub_selection_IR_partial
+*		Tells the robot the IR section
+*/
 e_auto_sub_selection_IR_partial_types g_auto_sub_selection_IR_partial = SUB_SELECTION_IR_ALL;
 
 /**
@@ -545,6 +557,9 @@ const int g_backwards_crate4_to_turn_dist = 140;
 *
 *	@def BACKWARD_IR_THRESHOLD
 *		Tells the robot what the IR values need to be in order to detect the IR
+*
+* @var g_reset_angle_record
+*		Tells the robot of it should keep the value of the angle sensor or not
 */
 #define MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE 110
 #define MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE 20
