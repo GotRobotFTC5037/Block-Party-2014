@@ -46,7 +46,7 @@ void abs_end_ramp(int delay, int lift_speed)
 		}
 		else
 		{
-			if(g_end_point == 2) {g_to_turn_dist = 5;}
+			if(g_end_point == 2) {g_to_turn_dist = 3;}
 			else if(g_end_point == 3) {g_to_turn_dist = 196;}
 		}
 	}
