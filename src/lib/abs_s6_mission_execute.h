@@ -28,7 +28,7 @@ void abs_s6_mission_execute()
 	switch(g_mission_number)
 	{
 	case 0:
-		abs_drive(FORWARD, E_ANGLE, 260, 40, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, 240, 40, true, GYRO);
 		abs_turn(COUNTERCLOCKWISE, POINT, TURN, 80, 40);
 		abs_drive(FORWARD, E_ANGLE, 100, 40, true, GYRO);
 		break;

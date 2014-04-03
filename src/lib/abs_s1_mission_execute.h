@@ -34,10 +34,16 @@ void abs_s1_mission_execute()
 	case 1:
 		dist_record=true;
 		abs_drive(FORWARD, E_IR_DETECT, 7, IR_DRIVE_SPEED, true, GYRO);
-		if(abs_get_angle_sensor_val(RELATIVE_BPU) < 38)
+		int min_dist = 50;
+		if((g_start_point==1&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_3_4)||(g_start_point==2&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_1_2)) min_dist = 125;
+		if(abs_get_angle_sensor_val(RELATIVE_BPU) < min_dist)
 		{
+			int to_crate = 50;
+			if((g_start_point==1&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_3_4)||(g_start_point==2&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_1_2)) to_crate = 125;
+
+			g_reset_angle_record = false;
 			dist_record = true;
-			abs_drive(FORWARD, E_ANGLE, 40 - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
+			abs_drive(FORWARD, E_ANGLE, to_crate - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
 		}
 		PlayTone(200,20);
 		wait1Msec(500);
@@ -45,7 +51,7 @@ void abs_s1_mission_execute()
 
 	case 2:
 		dist_record=true;
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/150, NON_IR_DRIVE_SPEED, true, GYRO);
+		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/155, NON_IR_DRIVE_SPEED, true, GYRO);
 
 		wait1Msec(2000);
 		break;

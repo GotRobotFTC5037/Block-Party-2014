@@ -32,12 +32,12 @@
 
 void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int dist, int speed, bool stop_at_end, e_drive_type drive_type)
 {
-	 /** logging constants */
-        const string speed_str = "speed";
-        const string dist_str = "dist";
-        const string rel_bpu_str = "rel BPU";
-        const string rel_asu_str = "rel ASU";
-        const string bearing_ac2_str = "g_bearing_ac2";
+	/** logging constants */
+	const string speed_str = "speed";
+	const string dist_str = "dist";
+	const string rel_bpu_str = "rel BPU";
+	const string rel_asu_str = "rel ASU";
+	const string bearing_ac2_str = "g_bearing_ac2";
 
 	int last_heading = g_const_heading;
 
@@ -45,20 +45,20 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	switch(dist_method)
 	{
 	case E_IR_DETECT:
-                abs_dlog(__FILE__ , "IR enter", speed_str, speed, dist_str, dist, bearing_ac2_str, g_bearing_ac2, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
-                break;
-        case E_IR_DETECT2:
-                abs_dlog(__FILE__ , "IR2 enter", speed_str, speed, dist_str, dist, bearing_ac2_str, g_bearing_ac2, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
-                break;
-        case E_ANGLE:
-                abs_dlog(__FILE__ , "angle enter", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
-                break;
-        case E_TIME:
-                abs_dlog(__FILE__ , "time enter", speed_str, speed, dist_str, dist, "time", time1[T1], rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
-                break;
+		abs_dlog(__FILE__ , "IR enter", speed_str, speed, dist_str, dist, bearing_ac2_str, g_bearing_ac2, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
+		break;
+	case E_IR_DETECT2:
+		abs_dlog(__FILE__ , "IR2 enter", speed_str, speed, dist_str, dist, bearing_ac2_str, g_bearing_ac2, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
+		break;
+	case E_ANGLE:
+		abs_dlog(__FILE__ , "angle enter", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
+		break;
+	case E_TIME:
+		abs_dlog(__FILE__ , "time enter", speed_str, speed, dist_str, dist, "time", time1[T1], rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
+		break;
 	case E_OPTICAL:
-                abs_dlog(__FILE__ , "Optical enter", speed_str, speed, dist_str, dist, "g_calibrated_optical_threshold_val", g_calibrated_optical_threshold_val, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
-                break;
+		abs_dlog(__FILE__ , "Optical enter", speed_str, speed, dist_str, dist, "g_calibrated_optical_threshold_val", g_calibrated_optical_threshold_val, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
+		break;
 	}
 	int i = 0;
 	nMotorEncoder(right_motor)= 0;
@@ -132,21 +132,13 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	//drive until we see the ir
 	else if(dist_method == E_IR_DETECT)
 	{
+		int total_dist = 150;
+		int half_dist = 100;
+
+		if((g_start_point==1&&g_auto_sub_selection_IR_partial == SUB_SELECTION_IR_1_2)||(g_start_point==2&&g_auto_sub_selection_IR_partial == SUB_SELECTION_IR_3_4)) total_dist = 75;
+
 		abs_reset_angle_sensor_val(SOFT_RESET);
 		abs_dlog(__FILE__ ,"reset angle", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
-
-		int total_dist = 0;
-		int half_dist = 0;
-		if(g_start_point == 1||g_start_point == 2)
-		{
-			total_dist = 150;
-			half_dist = 100;
-		}
-		else //start point = 3
-		{
-			total_dist= 100;
-			half_dist = 100;
-		}
 
 		if(dir == FORWARD)
 		{
@@ -306,10 +298,14 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	//Tells the robot to stop baced on the real distence it has went
 	else if(dist_method == E_ANGLE)
 	{
-		abs_reset_angle_sensor_val(SOFT_RESET);
+		int pre_dist = 0;
+		if(g_reset_angle_record == false) pre_dist = abs_get_angle_sensor_val(RELATIVE_BPU);
+		else abs_reset_angle_sensor_val(SOFT_RESET);
+		g_reset_angle_record = true;
+
 		abs_dlog(__FILE__ ,"reset angle", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 
-		while(abs_get_angle_sensor_val(RELATIVE_BPU) < dist)
+		while(abs_get_angle_sensor_val(RELATIVE_BPU) < (dist+pre_dist))
 		{
 			if(drive_type == GYRO)
 			{
@@ -419,7 +415,7 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 		if(g_start_point==1)
 		{
 			if(g_end_point == 3) g_dist_backwards = abs_get_angle_sensor_val(RELATIVE_BPU) - 6;//was 9
-			else if(g_end_point == 2) g_dist_backwards = 190 - abs_get_angle_sensor_val(RELATIVE_BPU);
+			else if(g_end_point == 2) g_dist_backwards = 194 - abs_get_angle_sensor_val(RELATIVE_BPU);
 		}
 		else if(g_start_point==2)
 		{
@@ -445,8 +441,8 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	}
 
 	int rel_asu = abs_get_angle_sensor_val(RELATIVE_ASU);
-        int rel_bpu = abs_get_angle_sensor_val(RELATIVE_BPU);
-        abs_dlog(__FILE__ ,"exit", speed_str, speed, dist_str, dist, rel_asu_str, rel_asu, rel_bpu_str, rel_bpu);
+	int rel_bpu = abs_get_angle_sensor_val(RELATIVE_BPU);
+	abs_dlog(__FILE__ ,"exit", speed_str, speed, dist_str, dist, rel_asu_str, rel_asu, rel_bpu_str, rel_bpu);
 
 	g_const_heading = last_heading;
 }
