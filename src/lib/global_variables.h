@@ -82,6 +82,10 @@ bool g_gyro_true = false;
 /**
  * @var g_angle_sensor_val
  *		Tells the robot the value of the raw angle sensor
+ * @var g_EOPD_sensor
+ *		Tells the robot the value of the raw angle sensor
+ * @var g_optical_sensor
+ *		Tells the robot the value of the raw angle sensor
  */
 
 long g_angle_sensor_val = 0;
@@ -147,7 +151,7 @@ int g_optical_sensor = 0;
 * 		Tells the robot how fast to spin the robot flag to make the flag go up
 *
 * @var g_flag_speed_left
-* 		 Tells the robot how fast to spin the robot flag lift left
+*			Tells the robot how fast to spin the robot flag lift left
 *
 * @var g_abdd_up
 * 		Tells the robot what position to put the servo when puting it up
@@ -171,6 +175,17 @@ int g_optical_sensor = 0;
 *
 * @var g_optical_move_min_dist
 * 		Tells the robot how far it should move before it should be in optical detection distence
+*
+* @def NON_IR_DRIVE_SPEED
+*			Tells the robot how fast to go when its not using IR
+*
+* @def IR_DRIVE_SPEED
+*			Tells the robot how fast to go when its using IR
+*
+* @def TURN_SPEED
+*			Tells the robot how fast to turn
+*
+*
 */
 const int g_block_speed_down = -60;
 const int g_block_speed_up = 100;
@@ -341,6 +356,13 @@ typedef enum
 } e_auto_sub_selection;
 
 e_auto_sub_selection g_auto_grabber_selections = SUB_SELECTION_GRABBERS_IN;
+/**
+* @enum e_auto_sub_selection_ramp_sides Tells the robot the side if the ramp it should drive on
+* @var e_auto_sub_selection_ramp_sides::SUB_SELECTION_RAMP_ALLY_SIDE
+*		Drive on the ally side
+* @var e_auto_sub_selection_ramp_sides::SUB_SELECTION_RAMP_OPP_SIDE
+*		Drive on opp side
+*/
 
 typedef enum
 {
@@ -348,6 +370,10 @@ typedef enum
 	SUB_SELECTION_RAMP_OPP_SIDE
 } e_auto_sub_selection_ramp_sides;
 
+/**
+* @var g_auto_sub_selection_ramp_side
+*		Tells the robot the if it should go on the ally or opp side
+*/
 e_auto_sub_selection_ramp_sides g_auto_sub_selection_ramp_side = SUB_SELECTION_RAMP_ALLY_SIDE;
 
 /**
@@ -389,6 +415,10 @@ typedef enum
 	SUB_SELECTION_RAMP_CONTINUED
 } e_auto_sub_selection_ramp;
 
+/**
+* @var g_auto_selection_ramp_continue_options
+*		Tells the robot if it should stop or continue on the ramp
+*/
 e_auto_sub_selection_ramp g_auto_selection_ramp_continue_options = SUB_SELECTION_RAMP_STOP;
 
 /**
@@ -491,6 +521,22 @@ const int g_backwards_crate2_to_turn_dist = 65;
 const int g_backwards_crate3_to_turn_dist = 115;
 const int g_backwards_crate4_to_turn_dist = 140;
 
+/**
+* @def MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE
+*		Tells the robot the maxamum drive dist  to first ramp
+*
+* @def MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE
+*		Tells the robot the maxamum drive dist tot the first ramp
+*
+* @def DRIVE_DIST_TO_OPP_RAMP_SIDE
+*		Tells the robot the distence it need to drive in order to got to the opponents ramp
+*
+*	@def FORWARD_IR_THRESHOLD
+*		Tells the robot what the IR values need to be in order to detect the IR
+*
+*	@def BACKWARD_IR_THRESHOLD
+*		Tells the robot what the IR values need to be in order to detect the IR
+*/
 #define MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE 110
 #define MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE 20
 
@@ -584,6 +630,12 @@ float g_delta_drift = 0;
 *
 * @var g_selection_value
 *		degbuging var for this
+*
+* @var g_quick_mission
+*		Tells the robot the namber for quick selection
+*
+* @var g_max_quick_missions
+*		Tells the robot the maxamum amout of quick selection programs
 */
 
 int g_debug_time_1 = 0;
@@ -900,6 +952,7 @@ int g_accelermoeter_average = 0;
 
 /**
 * @var g_sensor_reference_drive
+*		Tells the robot if it should use sensors to help it drive
 */
 
 bool g_sensor_reference_drive = false;
