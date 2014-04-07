@@ -16,7 +16,7 @@
 #include "math_utils.h"
 #include "global_variables.h"
 
-void abs_hold_position()
+void abs_stay_on_ramp()
 {
 	int stop_location = abs_get_angle_sensor_val(RAW_BPU);
 	while(true)

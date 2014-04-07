@@ -25,74 +25,71 @@ void abs_s4_mission_execute()
 {
 	switch(g_mission_number)
 	{
-	case 1: //IR mission, currently not working
+	case 1:
 		break;
 
-	case 2: //deliver to crate 4 mission
-		abs_drive(FORWARD, E_ANGLE, 5, 30, true, g_drive_type);
+	case 2:
+		abs_drive(FORWARD, E_ANGLE, 5, 50, true, GYRO);
 		abs_turn(CLOCKWISE, POINT, TURN_TO, 45, 40);
-		abs_drive(FORWARD, E_ANGLE, 37, 60, true, g_drive_type);
-		abs_turn(CLOCKWISE, POINT, TURN_TO, 136, 30);
-		abs_drive(FORWARD, E_ANGLE, 5, 30, true, g_drive_type);
+		abs_drive(FORWARD, E_ANGLE, 43, 60, true, GYRO);
+		abs_turn(CLOCKWISE, POINT, TURN_TO, 128, 30);
 
-		if(g_end_point == 3) g_to_turn_dist = g_forward_crate1_to_turn_dist;
+		if(g_end_point == 3) g_to_turn_dist = g_forward_crate1_to_turn_dist+15;
 		else if(g_end_point == 2) g_to_turn_dist = 45;
 		break;
 
-	case 3: //deliver to crate 3 mission
-		abs_drive(FORWARD, E_ANGLE, 5, 30, true, g_drive_type);
+	case 3:
+		abs_drive(FORWARD, E_ANGLE, 5, 50, true, GYRO);
 		abs_turn(CLOCKWISE, POINT, TURN_TO, 45, 40);
-		abs_drive(FORWARD, E_ANGLE, 37, 60, true, g_drive_type);
-		abs_turn(CLOCKWISE, POINT, TURN_TO, 136, 30);
-		abs_drive(BACKWARD, E_ANGLE, 7, 50, true, g_drive_type);
-		if(g_end_point == 3)g_to_turn_dist = g_forward_crate2_to_turn_dist;
+		abs_drive(FORWARD, E_ANGLE, 43, 60, true, GYRO);
+		abs_turn(CLOCKWISE, POINT, TURN_TO, 128, 30);
+		abs_drive(BACKWARD, E_ANGLE, 25, 50, true, GYRO);
+
+		if(g_end_point == 3)g_to_turn_dist = g_forward_crate2_to_turn_dist+15;
 		else g_to_turn_dist = 70;
 		break;
 
-	case 4: //deliver to crate 2 mission
-		abs_drive(FORWARD, E_ANGLE, 5, 30, true, g_drive_type);
+	case 4:
+		abs_drive(FORWARD, E_ANGLE, 5, 50, true, GYRO);
 		abs_turn(CLOCKWISE, POINT, TURN_TO, 45, 40);
-		abs_drive(FORWARD, E_ANGLE, 37, 60, true, g_drive_type);
-		abs_turn(CLOCKWISE, POINT, TURN_TO, 136, 30);
-		abs_drive(BACKWARD, E_ANGLE, 55, 50, true, g_drive_type);
-		if(g_end_point == 3)g_to_turn_dist = g_forward_crate3_to_turn_dist;
+		abs_drive(FORWARD, E_ANGLE, 43, 60, true, GYRO);
+		abs_turn(CLOCKWISE, POINT, TURN_TO, 128, 30);
+		abs_drive(BACKWARD, E_ANGLE, 75, 50, true, GYRO);
+
+		if(g_end_point == 3)g_to_turn_dist = g_forward_crate3_to_turn_dist+10;
 		else g_to_turn_dist = 120;
 		break;
 
-	case 5://deliver to crate 1 mission
-		abs_drive(FORWARD, E_ANGLE, 5, 30, true, g_drive_type);
+	case 5:
+		abs_drive(FORWARD, E_ANGLE, 5, 50, true, GYRO);
 		abs_turn(CLOCKWISE, POINT, TURN_TO, 45, 40);
-		abs_drive(FORWARD, E_ANGLE, 37, 60, true, g_drive_type);
-		abs_turn(CLOCKWISE, POINT, TURN_TO, 136, 30);
-		abs_drive(BACKWARD, E_ANGLE, 82, 50, true, g_drive_type);
-		if(g_end_point == 3)g_to_turn_dist = g_forward_crate4_to_turn_dist;
+		abs_drive(FORWARD, E_ANGLE, 43, 60, true, GYRO);
+		abs_turn(CLOCKWISE, POINT, TURN_TO, 128, 30);
+		abs_drive(BACKWARD, E_ANGLE, 100, 50, true, GYRO);
+
+		if(g_end_point == 3)g_to_turn_dist = g_forward_crate4_to_turn_dist+10;
 		else g_to_turn_dist = 145;
 		break;
 
-	case 6: //will be defence mission 1
-		abs_turn(CLOCKWISE, SWING, TURN_TO, 60, 60);
-		abs_drive(FORWARD, E_ANGLE, 30, 50, true, g_drive_type);
-		abs_turn(CLOCKWISE, POINT, TURN_TO, 120, 60);
-		abs_drive(FORWARD, E_ANGLE, g_to_turn_dist, 50, true, g_drive_type);
-		abs_turn(CLOCKWISE, POINT, TURN, 90, 60);
-		abs_drive(FORWARD, E_ANGLE, 180, 50, true, g_drive_type);
+	case 6:
 		break;
 
-	case 7: //will be defence mission 2
+	case 7:
 		break;
 	}
-	abs_dlog(__FILE__,"abdd up", "instance", 2, "g_abbd_up", g_abdd_up);	//open and log abdd
-	servo[abdd] = g_abdd_up;
-		#if USE_TASK_PRIORITY == 1
-	StartTask(abs_calibrate_EOPD, MEDIUM_PRIORITY_TASK);		//start the screen function, this handels all screen interactions
-#else
-	StartTask(abs_calibrate_EOPD);		//start the screen function, this handels all screen interactions
-#endif
-	wait1Msec(2000);
-	servo[abdd] = g_abdd_down;	//return and log the abdd
-	abs_dlog(__FILE__,"abdd down", "instance", 2, "g_abdd_down", g_abdd_down);
+	if(g_mission_number != 0)
+	{
+		abs_dlog(__FILE__,"abdd up");
+		servo[abdd] = g_abdd_up;
+		StartTask (abs_calibrate_optical);
+		wait1Msec(2000);
+		servoChangeRate[abdd] = 10;
+		servo[abdd] = g_abdd_down;
+		abs_dlog(__FILE__,"abdd down");
+	}
 
-	wait1Msec(g_end_delay * DELAY_MULTIPLICATION_FACTOR); //wait for end delay, number option tab 4
+	wait1Msec(g_end_delay * DELAY_MULTIPLICATION_FACTOR);
+	wait1Msec(100);
 }
 
 #endif /* !ABS_S4_MISSION_EXECUTE_H */

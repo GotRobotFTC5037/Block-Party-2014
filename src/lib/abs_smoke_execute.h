@@ -81,7 +81,8 @@ void abs_smoke_execute(int test_num)
 				while(nNxtButtonPressed==kRightButton){}
 			}
 			abs_smoke_test_view(test_num,0,0);
-			motor[sky_hook] = 0;
+			motor[right_motor] = 0;
+			motor[left_motor] = 0;
 			break;
 		case 4:
 			static int left_grabber = 0;
@@ -172,24 +173,24 @@ void abs_smoke_execute(int test_num)
 			motor[jolly_roger] = 0;
 			break;
 		case 8:
-			static int EOPD_servo_pos = EOPD_SERVO_UP;
+			static int optical_servo_pos = OPTICAL_SERVO_UP;
 			if(nNxtButtonPressed==kLeftButton)
 			{
-				EOPD_servo_pos = EOPD_SERVO_DOWN;
+				optical_servo_pos = OPTICAL_SERVO_DOWN;
 				PlaySoundFile("! Click.rso");
 				while(nNxtButtonPressed==kLeftButton){}
 			}
 			else if(nNxtButtonPressed==kRightButton)
 			{
-				EOPD_servo_pos = EOPD_SERVO_UP;
+				optical_servo_pos = OPTICAL_SERVO_UP;
 				PlaySoundFile("! Click.rso");
 				while(nNxtButtonPressed==kRightButton){}
 			}
-			servo[EOPD_servo] = EOPD_servo_pos;
-			abs_smoke_test_view(test_num,EOPD_servo_pos,0);
+			servo[optical_servo] = optical_servo_pos;
+			abs_smoke_test_view(test_num,optical_servo_pos,0);
 			break;
 		case 9:
-			abs_smoke_test_view(test_num,g_angle_sensor,g_angle_sensor/INT_ANGLE_SENSOR_CIRCUMFERENCE);
+			//abs_smoke_test_view(test_num,g_angle_sensor,g_angle_sensor/INT_ANGLE_SENSOR_CIRCUMFERENCE);
 			break;
 		default: abs_cscreen("ERROR   ","Test 2 B","added   "); break;
 		}

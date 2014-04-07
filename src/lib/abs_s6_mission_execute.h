@@ -1,6 +1,6 @@
 /**
 *
-*  @file abs_s5_mission_execute.h
+*  @file abs_s6_mission_execute.h
 *
 *  @brief runs the missions from the starting point S1
 *
@@ -12,8 +12,8 @@
 *
 */
 
-#ifndef ABS_S5_MISSION_EXECUTE_H
-#define ABS_S5_MISSION_EXECUTE_H
+#ifndef ABS_S6_MISSION_EXECUTE_H
+#define ABS_S6_MISSION_EXECUTE_H
 
 #include "abs_drive.h"
 #include "abs_turn.h"
@@ -23,13 +23,13 @@
 #include "abs_get_angle_sensor_val.h"
 #include "abs_stay_on_ramp.h"
 
-void abs_s5_mission_execute()
+void abs_s6_mission_execute()
 {
 	switch(g_mission_number)
 	{
 	case 0:
-		abs_drive(FORWARD, E_ANGLE, 260, 40, true, GYRO);
-		abs_turn(CLOCKWISE, POINT, TURN, 80, 40);
+		abs_drive(FORWARD, E_ANGLE, 240, 40, true, GYRO);
+		abs_turn(COUNTERCLOCKWISE, POINT, TURN, 80, 40);
 		abs_drive(FORWARD, E_ANGLE, 100, 40, true, GYRO);
 		break;
 
@@ -40,8 +40,6 @@ void abs_s5_mission_execute()
 		g_end_point = 1;
 		break;
 	}
-
-	//abs_dlog(__FILE__,"start of end", "g_end_point", g_end_point);
 }
 
-#endif /* !ABS_S5_MISSION_EXICUTE_H */
+#endif /* !ABS_S6_MISSION_EXICUTE_H */

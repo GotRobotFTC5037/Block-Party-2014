@@ -29,7 +29,6 @@
 #include "abs_reset_angle_sensor.h"
 #include "abs_get_angle_sensor_val.h"
 #include "abs_move_utils.h"
-#include "abs_set_heading.h"
 
 void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int dist, int speed, bool stop_at_end, e_drive_type drive_type)
 {
@@ -39,6 +38,8 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	const string rel_bpu_str = "rel BPU";
 	const string rel_asu_str = "rel ASU";
 	const string bearing_ac2_str = "g_bearing_ac2";
+
+	int last_heading = g_const_heading;
 
 	//log the paramiters
 	switch(dist_method)
@@ -55,13 +56,13 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	case E_TIME:
 		abs_dlog(__FILE__ , "time enter", speed_str, speed, dist_str, dist, "time", time1[T1], rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 		break;
-	case E_EOPD:
-		abs_dlog(__FILE__ , "EOPD enter", speed_str, speed, dist_str, dist, "g_calibrated_EOPD_threshold_val", g_calibrated_EOPD_threshold_val, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
+	case E_OPTICAL:
+		abs_dlog(__FILE__ , "Optical enter", speed_str, speed, dist_str, dist, "g_calibrated_optical_threshold_val", g_calibrated_optical_threshold_val, rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 		break;
 	}
 	int i = 0;
 	nMotorEncoder(right_motor)= 0;
-	abs_reset_heading(RELATIVE);
+	g_rel_heading = 0;
 
 	//------------------------
 	// time stopping method
@@ -131,17 +132,14 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	//drive until we see the ir
 	else if(dist_method == E_IR_DETECT)
 	{
+		int total_dist = 150;
+		int half_dist = 100;
+
+		if((g_start_point==1&&g_auto_sub_selection_IR_partial == SUB_SELECTION_IR_1_2)||(g_start_point==2&&g_auto_sub_selection_IR_partial == SUB_SELECTION_IR_3_4)) total_dist = 75;
+
 		abs_reset_angle_sensor_val(SOFT_RESET);
 		abs_dlog(__FILE__ ,"reset angle", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 
-		int total_dist = 0;
-		int half_dist = 0;
-		if(g_start_point == 1||g_start_point == 2)
-		{total_dist = 150;
-			half_dist = 100;}
-		else //start point = 3
-		{total_dist= 100;
-			half_dist = 100;}
 		if(dir == FORWARD)
 		{
 			//wait intil we get past the specified area or we detect the IR
@@ -181,6 +179,7 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 					motor[right_motor] = speed;
 				}
 			}
+			//g_screen_state = S_TIME_SHOW;
 			g_debug_time_1 = nPgmTime;
 		}
 		else if(dir == BACKWARD)
@@ -261,15 +260,52 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 		}
 	}
 	//------------------------
+	// accelermeoter sensor stopping method
+	//------------------------
+	//Stops the robot baced on the accelermeoter
+	else if(dist_method == E_TILT)
+	{
+		int j = 0;
+		g_sensor_reference_drive = true;
+		while(j<30)
+		{
+			if(drive_type == GYRO)
+			{
+				abs_gyro_drive(speed,dir);
+			}
+
+			/** No gyro correction*/
+			else
+			{
+				if(dir == FORWARD)
+				{
+					motor[left_motor] = speed;
+					motor[right_motor] = speed;
+				}
+				else
+				{
+					motor[left_motor] = -speed;
+					motor[right_motor] = -speed;
+				}
+			}
+			if(g_accelermoeter_average > dist) j++;
+		}
+		g_sensor_reference_drive = false;
+	}
+	//------------------------
 	// angle sensor stopping method
 	//------------------------
 	//Tells the robot to stop baced on the real distence it has went
 	else if(dist_method == E_ANGLE)
 	{
-		abs_reset_angle_sensor_val(SOFT_RESET);
+		int pre_dist = 0;
+		if(g_reset_angle_record == false) pre_dist = abs_get_angle_sensor_val(RELATIVE_BPU);
+		else abs_reset_angle_sensor_val(SOFT_RESET);
+		g_reset_angle_record = true;
+
 		abs_dlog(__FILE__ ,"reset angle", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 
-		while(abs_get_angle_sensor_val(RELATIVE_BPU) < dist)
+		while(abs_get_angle_sensor_val(RELATIVE_BPU) < (dist+pre_dist))
 		{
 			if(drive_type == GYRO)
 			{
@@ -279,17 +315,15 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 			/** No gyro correction*/
 			else
 			{
-				int adj_speed = adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
-
 				if(dir == FORWARD)
 				{
-					motor[left_motor] = adj_speed;
-					motor[right_motor] = adj_speed;
+					motor[left_motor] = adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
+					motor[right_motor] = adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
 				}
 				else
 				{
-					motor[left_motor] = -adj_speed;
-					motor[right_motor] = -adj_speed;
+					motor[left_motor] = -adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
+					motor[right_motor] = -adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
 				}
 			}
 		}
@@ -297,41 +331,34 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 		abs_dlog(__FILE__ ,"angle break", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 	}
 	//================
-	// Light
+	// OPTICAL
 	//================
-	//stops baced on the light sensor
-	else if(dist_method == E_EOPD)
+	else if(dist_method == E_OPTICAL)
 	{
-		bool EOPD_fail = false;
+		bool optical_fail = false;
 		abs_reset_angle_sensor_val(SOFT_RESET);
 
 		abs_dlog(__FILE__ ,"reset angle", speed_str, speed, dist_str, dist, rel_asu_str, abs_get_angle_sensor_val(RELATIVE_ASU), rel_bpu_str, abs_get_angle_sensor_val(RELATIVE_BPU));
 
-		int max_EOPD_detected = 0;
+		int max_optical_detected = 0;
 		while(true)
 		{
-			//finds out what the highest value of the light sensor was
-			max_EOPD_detected = max(max_EOPD_detected, g_EOPD_sensor);
+			//finds out what the highest value of the optical sensor was
+			max_optical_detected = max(max_optical_detected, g_optical_sensor);
 
-			if(g_EOPD_sensor>g_calibrated_EOPD_threshold_val&&abs_get_angle_sensor_val(RELATIVE_BPU)<MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE)
+			if(g_optical_sensor>g_calibrated_optical_threshold_val&&abs_get_angle_sensor_val(RELATIVE_ASU)<g_optical_move_min_dist)
 			{
-				// make sure we only print this once
-				if(!EOPD_fail)
-				{
-					abs_dlog(__FILE__ ,"Premature EOPD detection: ", "Min BPU: %d", MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE, "Actual BPU when detected: %d", abs_get_angle_sensor_val(RELATIVE_BPU), "EOPD Threshold: %d", g_calibrated_EOPD_threshold_val, "EOPD Value detected: %d", max_EOPD_detected);
-					EOPD_fail = true;
-				}
+				abs_dlog(__FILE__ ,"Premature Optical detection", "Min BPU", g_optical_move_min_dist, "Actual BPU when detected", abs_get_angle_sensor_val(RELATIVE_BPU), "Optical Threshold", g_calibrated_optical_threshold_val, "Optical Value detected", max_optical_detected);
+				optical_fail = true;
 			}
-
-			if(g_EOPD_sensor>g_calibrated_EOPD_threshold_val&&EOPD_fail==false)
+			if(g_optical_sensor>g_calibrated_optical_threshold_val&&optical_fail==false)
 			{
-				abs_dlog(__FILE__ ,"EOPD break", speed_str, speed, dist_str, dist, "g_calibrated_EOPD_threshold", g_calibrated_EOPD_threshold_val, "g_EOPD_sensor", g_EOPD_sensor);
+				abs_dlog(__FILE__ ,"optical break", speed_str, speed, dist_str, dist, "g_calibrated_optical_threshold", g_calibrated_optical_threshold_val, "g_optical_sensor", g_optical_sensor);
 				break;
 			}
 			else if (abs_get_angle_sensor_val(RELATIVE_BPU) > dist)
 			{
-				abs_dlog(__FILE__ ,"angle break: ", "speed: %d", speed, "max distance: %d", dist, "EOPD Threshold: %d", g_calibrated_EOPD_threshold_val, "EOPD Value detected: %d", max_EOPD_detected);
-
+				abs_dlog(__FILE__ ,"angle break", "speed", speed, "max distance", dist, "Optical Threshold", g_calibrated_optical_threshold_val, "optical Value detected", max_optical_detected);
 				break;
 			}
 
@@ -343,17 +370,15 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 			/** No gyro correction*/
 			else
 			{
-				int adj_speed = adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
-
 				if(dir == FORWARD)
 				{
-					motor[left_motor] = adj_speed;
-					motor[right_motor] = adj_speed;
+					motor[left_motor] = adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
+					motor[right_motor] = adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
 				}
 				else
 				{
-					motor[left_motor] = -adj_speed;
-					motor[right_motor] = -adj_speed;
+					motor[left_motor] = -adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
+					motor[right_motor] = -adjusted_drive_speed(speed, dist, abs_get_angle_sensor_val(RELATIVE_BPU));
 				}
 			}
 		}
@@ -380,14 +405,17 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 	}
 	g_debug_time_2 = nPgmTime;
 
-	servo[EOPD_servo] = EOPD_SERVO_UP;
+	if(dist_method == E_OPTICAL) servo[optical_servo] = OPTICAL_SERVO_UP;
 
+#if EOPD_ACTIVE == 0
+	if(dist_method==E_LIGHT) LSsetInactive(LEGOLS);
+#endif
 	if(dist_record==true)
 	{
 		if(g_start_point==1)
 		{
 			if(g_end_point == 3) g_dist_backwards = abs_get_angle_sensor_val(RELATIVE_BPU) - 6;//was 9
-			else if(g_end_point == 2) g_dist_backwards = 200 - abs_get_angle_sensor_val(RELATIVE_BPU);
+			else if(g_end_point == 2) g_dist_backwards = 194 - abs_get_angle_sensor_val(RELATIVE_BPU);
 		}
 		else if(g_start_point==2)
 		{
@@ -409,16 +437,14 @@ void abs_drive(e_drive_direction dir, e_move_stopping_method dist_method, int di
 			if(g_end_point==2)	g_dist_backwards = 170 - abs_get_angle_sensor_val(RELATIVE_BPU);
 			else if(g_end_point==3) g_dist_backwards = 75 + abs_get_angle_sensor_val(RELATIVE_BPU);
 		}
-		else
-		{
-			//TODO:  add the code for this default case
-		}
 		//dist_record=false;
 	}
 
 	int rel_asu = abs_get_angle_sensor_val(RELATIVE_ASU);
 	int rel_bpu = abs_get_angle_sensor_val(RELATIVE_BPU);
 	abs_dlog(__FILE__ ,"exit", speed_str, speed, dist_str, dist, rel_asu_str, rel_asu, rel_bpu_str, rel_bpu);
+
+	g_const_heading = last_heading;
 }
 
 #endif /* !ABS_DRIVE_H */

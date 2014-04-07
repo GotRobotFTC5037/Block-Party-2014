@@ -59,5 +59,10 @@ void abs_ramp_interpret()
 		g_auto_sub_selection_ramp_side = SUB_SELECTION_RAMP_OPP_SIDE;
   }
 	else g_end_point = 1; //error for if an invaid value is inputed
+	if(g_start_point==3||g_start_point==4)
+	{
+		g_em_first_turn_type = RELATIVE_TURN;
+		g_em_second_turn_type = RELATIVE_TURN;
+	}
 }
 #endif /* !ABS_RAMP_INTERPRET_H */

@@ -15,43 +15,29 @@
 
 #include "math_utils.h"
 
-int abs_get_gyro_sensor_val(e_gyro_val_type gyro_val,e_gyro_names which_gyro)
+int abs_get_gyro_sensor_val(e_gyro_val_type gyro_val)
 {
-	static int last_gyro_read_time1 = 0;
-	static int last_gyro_read_val1 = 0;
-
-	static int last_gyro_read_time2 = 0;
-	static int last_gyro_read_val2 = 0;
+	static int last_gyro_read_time = 0;
+	static int last_gyro_read_val = 0;
 
 	int current_time = nPgmTime;
 	int last_val;
 	int delta_time;
 	if(g_gyro_ran == true)
 	{
-		if(which_gyro==GYRO1)
-		{
-		  last_val = last_gyro_read_val1;
-	  	delta_time = last_gyro_read_time1 - current_time;
-	  	last_gyro_read_time1 = current_time;
-	  }
-	  else
-	 	{
-		  last_val = last_gyro_read_val2;
-	  	delta_time = last_gyro_read_time2 - current_time;
-	  	last_gyro_read_time2 = current_time;
-	  }
+		last_val = last_gyro_read_val;
+		delta_time = last_gyro_read_time - current_time;
 	}
 
-	//TODO:  we should not be storing both the RAW and non-RAW values into the same static variable otherwise the delta results will be wrong
+	last_gyro_read_time = current_time;
+
 	if(gyro_val == RAW)
 	{
-		if(which_gyro==GYRO1) last_gyro_read_val1 = HTGYROreadRot(HTGYRO);
-		else last_gyro_read_val2 = HTGYROreadRot(HTGYRO2);
+		last_gyro_read_val = HTGYROreadRot(HTGYRO);
 	}
 	else
 	{
-		if(which_gyro==GYRO1) last_gyro_read_val1 = HTGYROreadRot(HTGYRO) - g_original_gyro_val1;
-		else last_gyro_read_val2 = HTGYROreadRot(HTGYRO2) - g_original_gyro_val2;
+		last_gyro_read_val = HTGYROreadRot(HTGYRO) - g_original_gyro_val;
 	}
 
 #if DEBUG_MODE == 1
@@ -91,16 +77,7 @@ int abs_get_gyro_sensor_val(e_gyro_val_type gyro_val,e_gyro_names which_gyro)
 
 	if(g_gyro_ran == true)
 	{
-		int delta_val;
-
-		if(which_gyro==GYRO1)
-		{
-		  delta_val = abs(last_gyro_read_val1 - last_val);
-		}
-		else
-		{
-		  delta_val = abs(last_gyro_read_val2 - last_val);
-		}
+		int delta_val = abs(last_gyro_read_val - last_val);
 
 		if(delta_val / delta_time > MAX_TURN_RATE)
 		{
@@ -110,10 +87,7 @@ int abs_get_gyro_sensor_val(e_gyro_val_type gyro_val,e_gyro_names which_gyro)
 
 	if(g_gyro_ran == false) g_gyro_ran = true;
 
-	if(which_gyro==GYRO1)
-	  return last_gyro_read_val1;
-	else
-		return last_gyro_read_val2;
+	return last_gyro_read_val;
 }
 
 #endif /* !ABS_GET_GYRO_SENSOR_VAL_H */

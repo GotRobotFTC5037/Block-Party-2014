@@ -10,12 +10,11 @@
 *
 *  @copyright Copyright 2013, Got Robot! FTC Team 5037
 */
-#ifndef ABS_MISSION_TO_TURN_AMOUNT
-#define ABS_MISSION_TO_TURN_AMOUNT
+#ifndef ABS_MISSION_TO_TURN_AMOUNT_H
+#define ABS_MISSION_TO_TURN_AMOUNT_H
 
-int abs_mission_to_turn_amount(int starting_point, int ramp_position, bool good_gyro, e_turn_stopping_method turn_method)
+int abs_mission_to_turn_amount(int starting_point, int ramp_position, bool good_gyro)
 {
-	abs_dlog(__FILE__ ,"Turn amount calculator", "ramp position:", ramp_position, "good gyro?", good_gyro, "Turn method", turn_method);
 	if(good_gyro)
 	{
 		switch (starting_point)
@@ -24,25 +23,11 @@ int abs_mission_to_turn_amount(int starting_point, int ramp_position, bool good_
 		case 2:
 			if(ramp_position == 2)
 			{
-				if(turn_method==TURN_TO)
-				{
-					return 275;
-				}
-				else
-				{
-					return 85;
-				}
+				return 277;
 			}
 			else
 			{
-				if(turn_method==TURN_TO)
-				{
-					return 265;
-				}
-				else
-				{
-					return 95;
-				}
+				return 268;
 			}
 		case 3:
 			return 315;
@@ -56,11 +41,11 @@ int abs_mission_to_turn_amount(int starting_point, int ramp_position, bool good_
 	{
 		if(ramp_position == 2)
 		{
-			return 85;
+			return 83;
 		}
 		else
 		{
-			return 95;
+			return 88;
 		}
 	}
 }

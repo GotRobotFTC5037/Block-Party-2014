@@ -13,22 +13,15 @@
 #ifndef ABS_TELE_OP_INITIALIZE_H
 #define ABS_TELE_OP_INITIALIZE_H
 
-//#include "abs_screen.h"
 
 void abs_tele_op_initialize()
 {
 	if(joystick.joy1_TopHat == -1) g_joy1_enabled = true;
 	if(joystick.joy2_TopHat == -1) g_joy2_enabled = true;
 
+	servoChangeRate[abdd] = 10;
 	servo[abdd] = g_abdd_down;
 
-#if USE_TASK_PRIORITY == 1
-	StartTask(abs_screen, BACKGROUND_TASK);		//start the screen function, this handels all screen interactions
-#else
-	//StartTask(abs_screen);		//start the screen function, this handels all screen interactions
-#endif
-	//g_screen_state = S_MISC_SHOW;
 	getJoystickSettings(joystick);
-	//memset(dl_joy1_btns,0,12);
 }
 #endif /* ABS_TELE_OP_INITIALIZE_H */

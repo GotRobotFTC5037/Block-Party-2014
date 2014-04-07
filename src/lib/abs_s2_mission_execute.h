@@ -26,80 +26,87 @@ void abs_s2_mission_execute()
 {
 	switch(g_mission_number)
 	{
-	case 0:	//test option only used for tests, currently angle sensor
-		abs_drive(FORWARD, E_ANGLE, /*distance in cm*/600, 50, true, g_drive_type);
+	case 0:
 		break;
 
-	case 1:	//IR mission
-		dist_record=true;		 //set to record the following movement for end movement distance
-		abs_drive(BACKWARD, E_IR_DETECT, BACKWARD_IR_THRESHOLD, 40, true, g_drive_type);
-		if(abs_get_angle_sensor_val(RELATIVE_BPU) < 38)		//if robot did not drive minimal distance drive to first crate
+	case 1:
+		dist_record=true;
+		abs_drive(BACKWARD, E_IR_DETECT, 3, IR_DRIVE_SPEED, true, GYRO);
+		g_shift_due_to_ir = true;
+		int min_dist = 38;
+		if((g_start_point==1&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_3_4)||(g_start_point==2&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_1_2)) min_dist = 125;
+		if(abs_get_angle_sensor_val(RELATIVE_BPU) < min_dist)
 		{
+			int to_crate = 40;
+			if((g_start_point==1&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_3_4)||(g_start_point==2&&g_auto_sub_selection_IR_partial==SUB_SELECTION_IR_1_2)) to_crate = 125;
+
+			g_reset_angle_record = false;
 			dist_record = true;
-			abs_drive(BACKWARD, E_ANGLE, 40 - abs_get_angle_sensor_val(RELATIVE_BPU), 40, true, g_drive_type);
+			abs_drive(FORWARD, E_ANGLE, to_crate - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
 		}
-		wait1Msec(500);
-		if(g_mission_number==1)		//if IR is used compensate line up
+		//Only use g_shift_due_to_ir when shifted due the the ir detecting
+		PlayTone(200,20);
+		if(g_shift_due_to_ir)
 		{
-			abs_drive(FORWARD, E_ANGLE, 6, 50, true, g_drive_type);
+			abs_drive(FORWARD, E_ANGLE, /*distance in cm*/6, NON_IR_DRIVE_SPEED, true, GYRO);
 		}
 		wait1Msec(500);
 		break;
 
-	case 2:	//deliver to crate 4 mission
+	case 2:
 		dist_record=true;
-		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/40, 50, true, g_drive_type);
+		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/40, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
-	case 3:	//deliver to crate 3 mission
+	case 3:
 		dist_record=true;
-		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/65, 50, true, g_drive_type);
+		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/65, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
-	case 4:	//deliver to crate 2 mission
+	case 4:
 		dist_record=true;
-		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/115, 50, true, g_drive_type);
+		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/115, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
-	case 5:	//deliver to crate 1 mission
+	case 5:
 		dist_record=true;
-		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/140, 50, true, g_drive_type);
+		abs_drive(BACKWARD, E_ANGLE, /*distance in cm*/140, NON_IR_DRIVE_SPEED, true, GYRO);
 		wait1Msec(2000);
 		break;
 
-	case 6: //will be defence mission 1
+	case 6:
 		abs_turn(CLOCKWISE, POINT, TURN, 75, 60);
 		wait1Msec(200);
-		abs_drive(FORWARD, E_ANGLE, 190, 50, true, g_drive_type);
+		abs_drive(FORWARD, E_ANGLE, 190, NON_IR_DRIVE_SPEED, true, GYRO);
 		abs_turn(COUNTERCLOCKWISE, POINT, TURN, 75, 60);
-		abs_drive(FORWARD, E_ANGLE, 80, 50, true, g_drive_type);
+		abs_drive(FORWARD, E_ANGLE, 80, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 
-	case 7: //will be defence mission 2
+	case 7:
 		abs_turn(COUNTERCLOCKWISE, POINT, TURN, 98, 60);
 		wait1Msec(200);
-		abs_drive(FORWARD, E_ANGLE, 87, 50, true, g_drive_type);
+		abs_drive(FORWARD, E_ANGLE, 87, NON_IR_DRIVE_SPEED, true, GYRO);
 		motor[block_lift_motor] = 40;
 		motor[block_lift_motor2] = 40;
 		abs_turn(CLOCKWISE, POINT, TURN, 103, 60);
 		motor[block_lift_motor] = 0;
 		motor[block_lift_motor2] = 0;
-		abs_drive(FORWARD, E_ANGLE, 80, 50, true, g_drive_type);
+		abs_drive(FORWARD, E_ANGLE, 80, NON_IR_DRIVE_SPEED, true, GYRO);
 		break;
 	}
-	abs_dlog(__FILE__,"abdd up", "instance", 2, "g_abdd_up", g_abdd_up);	//open and log abdd
-	servo[abdd] = g_abdd_up;
-#if USE_TASK_PRIORITY == 1
-	StartTask(abs_calibrate_EOPD, MEDIUM_PRIORITY_TASK);		//start the screen function, this handels all screen interactions
-#else
-	StartTask(abs_calibrate_EOPD);		//start the screen function, this handels all screen interactions
-#endif
-	wait1Msec(2000);
-	servoChangeRate[abdd] = abdd_down_speed;
-	servo[abdd] = g_abdd_down;	//return and log the abdd
-	abs_dlog(__FILE__,"abdd down", "instance", 2, "g_abdd_down", g_abdd_down);
+	if(g_mission_number != 0)
+	{
+		abs_dlog(__FILE__,"abdd up");
+		servo[abdd] = g_abdd_up;
+		StartTask (abs_calibrate_optical);
+		wait1Msec(2000);
+		servoChangeRate[abdd] = 10;
+		servo[abdd] = g_abdd_down;
+		abs_dlog(__FILE__,"abdd down");
+	}
 
-	wait1Msec(g_end_delay * DELAY_MULTIPLICATION_FACTOR); //wait for end delay, number option tab 4
+	wait1Msec(g_end_delay * DELAY_MULTIPLICATION_FACTOR);
+	wait1Msec(100);
 }
 
 #endif /* !ABS_S2_MISSION_EXECUTE_H */

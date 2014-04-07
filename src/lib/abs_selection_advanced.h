@@ -14,6 +14,8 @@
 #ifndef ABS_SELECTION_ADVANCED_H
 #define ABS_SELECTION_ADVANCED_H
 
+#include "lib/abs_ramp_interpret.h"
+
 void abs_selection_advanced()
 {
 	//---------------------------------------
@@ -64,6 +66,8 @@ void abs_selection_advanced()
 	}
 	PlaySoundFile("! Click.rso");
 	while(nNxtButtonPressed == kEnterButton){}
+
+	abs_ramp_interpret();
 }
 
 #endif /* !ABS_SELECTION_ADVANCED_H */

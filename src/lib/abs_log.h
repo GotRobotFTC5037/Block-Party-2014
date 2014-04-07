@@ -22,7 +22,7 @@ void abs_log(const char * input1,const char * input2, int input3, int input4, in
 	strcat(sString,CRLF);
 	WriteText(LogFileHandle, LogIoResult, sString);
 
-	StringFormat(sString, "%09.3f\t",(((float)nPgmTime)/1000));
+	StringFormat(sString, "%4d\t",nPgmTime);
 	WriteText(LogFileHandle, LogIoResult, sString);
 
 	if(!strcmp(input1,""))StringFormat(sString, input1);
@@ -53,10 +53,10 @@ void abs_log(const char * input1,const char * input2, int input3, int input4, in
 
 	if(input1=="abs_drive.h")
 	{
-		StringFormat(sString, "rel-g %4d\t", g_rel_heading_use);
+		StringFormat(sString, "rel-g %4d\t", g_rel_heading);
 		WriteText(LogFileHandle, LogIoResult, sString);
 
-		StringFormat(sString, "cnst-g %4d\t", g_const_heading_use);
+		StringFormat(sString, "cnst-g %4d\t", g_const_heading);
 		WriteText(LogFileHandle, LogIoResult, sString);
 	}
 }

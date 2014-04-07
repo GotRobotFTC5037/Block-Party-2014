@@ -20,7 +20,7 @@
 
 void abs_gyro_drive(int speed,e_drive_direction dir)
 {
-	int error = 0 - g_rel_heading_use;
+	int error = 0 - g_rel_heading;
 
 	if(dir == FORWARD)
 	{

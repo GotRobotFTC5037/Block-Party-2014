@@ -1,17 +1,17 @@
 #pragma systemFile // treat as system file to eliminate warnings for unused variables
 /**
-*
-*  @file global_variables.h
-*
-*  @brief varaibles that are global
-*
-*  @param None n/a
-*
-*  @return
-*
-*  @copyright Copyright 2013, Got Robot? FTC Team 5037
-*
-*/
+ *
+ *  @file global_variables.h
+ *
+ *  @brief varaibles that are global
+ *
+ *  @param None n/a
+ *
+ *  @return
+ *
+ *  @copyright Copyright 2013, Got Robot? FTC Team 5037
+ *
+ */
 //
 //============================================================
 // Define sensor multiplexor connectivity and port allocations
@@ -19,35 +19,22 @@
 
 #include "compile_flags.h"
 
-/**
-* @def HIGH_PRIORITY_TASK
-*	`	Tells the robot the value of a high priority task
-*	@def MEDIUM_PRIORITY_TASK
-*		Tells the rbot the value of a medium priority task
-*	@def LOW_PRIORITY_TASK
-*		Tells fhe robot the value of a low priority talk
-* @def BACKGROUND_TASK
-*
-*/
-#define HIGH_PRIORITY_TASK 5
-#define MEDIUM_PRIORITY_TASK 5
-#define LOW_PRIORITY_TASK 5
-#define BACKGROUND_TASK 5
+const tMUXSensor HTIRS2 = msensor_S3_1;     // HiTechnic Infrared sensor
+const tMUXSensor HTAC = msensor_S3_2;
+const tMUXSensor HTGYRO = msensor_S2_1;	   // HiTechnic GYRO sensor
+const tMUXSensor HTIRS2_2 = msensor_S3_3;     // HiTechnic Infrared sensor 2
 
-
-const tMUXSensor HTEOPD = msensor_S2_1;
-const tMUXSensor HTIRS2 = msensor_S2_3;
-const tMUXSensor HTIRS2_2 = msensor_S2_4;
-
-const tMUXSensor HTGYRO2 = msensor_S2_2;
+#if EOPD_ACTIVE == 1
+const tMUXSensor HTEOPD = msensor_S3_4;
+#else
+const tMUXSensor LEGOLS = msensor_S3_4;
+#endif
 
 /**
 * @var g_gyro_true
 *		Tells the robot if it should use the gyro or not
 */
 bool g_gyro_true = false;
-
-//#define DL_LOCATION (strcat(strcat((char*)__FILE__, ":"),(char*)__LINE__))
 
 //=========================================================
 // Robot constants
@@ -74,10 +61,10 @@ bool g_gyro_true = false;
 *  @def GRABBER_RIGHT_CLOSE
 *     tells the robot where the left block grabber needs to be to be closed
 *
-* 	@def EOPD_SERVO_DOWN
-* 		Tells the robot the poision of the EOPD senser servo when its down
-* 	@def EOPD_SERVO_UP
-* 		Tells the robot the poision of the EOPD senser servo when its up
+* 	@def OPTICAL_SERVO_DOWN
+* 		Tells the robot the poision of the optical senser servo when its down
+* 	@def OPTICAL_SERVO_UP
+* 		Tells the robot the poision of the optical senser servo when its up
 */
 #define INT_ANGLE_SENSOR_CIRCUMFERENCE 18
 #define FLOAT_ANGLE_SENSOR_CIRCUMFERENCE 17.6
@@ -90,17 +77,22 @@ bool g_gyro_true = false;
 #define GRABBER_LEFT_CLOSE 120
 #define GRABBER_RIGHT_CLOSE 131
 
-#define EOPD_SERVO_DOWN 255
-#define EOPD_SERVO_UP 127
+#define OPTICAL_SERVO_DOWN 255
+#define OPTICAL_SERVO_UP 127
 /**
-* @var g_angle_sensor_val
-*		Tells the robot the value of the raw angle sensor
-*/
+ * @var g_angle_sensor_val
+ *		Tells the robot the value of the raw angle sensor
+ * @var g_EOPD_sensor
+ *		Tells the robot the value of the raw angle sensor
+ * @var g_optical_sensor
+ *		Tells the robot the value of the raw angle sensor
+ */
 
 long g_angle_sensor_val = 0;
-long g_angle_sensor = 0;
 
 int g_EOPD_sensor = 0;
+
+int g_optical_sensor = 0;
 
 /**
 *
@@ -159,7 +151,7 @@ int g_EOPD_sensor = 0;
 * 		Tells the robot how fast to spin the robot flag to make the flag go up
 *
 * @var g_flag_speed_left
-* 		 Tells the robot how fast to spin the robot flag lift left
+*			Tells the robot how fast to spin the robot flag lift left
 *
 * @var g_abdd_up
 * 		Tells the robot what position to put the servo when puting it up
@@ -178,11 +170,22 @@ int g_EOPD_sensor = 0;
 *
 * @var g_original_gyro_val
 *			Tells the robot what then orginal value of the gyro was
-* @var g_EOPD_threshold
-* 		Tells the robot what the EOPD threshhold is
+* @var g_optical_threshold
+* 		Tells the robot what the optical threshhold is
 *
-* @var g_EOPD_move_min_dist
-* 		Tells the robot how far it should move before it should be in EOPD detection distence
+* @var g_optical_move_min_dist
+* 		Tells the robot how far it should move before it should be in optical detection distence
+*
+* @def NON_IR_DRIVE_SPEED
+*			Tells the robot how fast to go when its not using IR
+*
+* @def IR_DRIVE_SPEED
+*			Tells the robot how fast to go when its using IR
+*
+* @def TURN_SPEED
+*			Tells the robot how fast to turn
+*
+*
 */
 const int g_block_speed_down = -60;
 const int g_block_speed_up = 100;
@@ -198,32 +201,79 @@ const int g_flag_speed_left = -20;
 const int g_abdd_up = 10;
 const int g_abdd_down = 235;
 
-const int g_gyro_adjust = 5; //was 3;
-int g_original_gyro_val1 = 0;
-int g_original_gyro_val2 = 0;
+const int g_gyro_adjust = 10;
+int g_original_gyro_val = 0;
 
 const int g_ground_arm_up = 0;
 
 const int g_ground_arm_down = 120;
 
-const int g_EOPD_threshold = 305;
+#if EOPD_ACTIVE == 1
+const int g_optical_threshold = 100;//305;
+#else
+const int g_optical_threshold = 30;
+#endif
 
-const int g_EOPD_move_min_dist = 70; // REMOVE
+const int g_optical_move_min_dist = 70;
+
+#define NON_IR_DRIVE_SPEED 70
+#define IR_DRIVE_SPEED 40
+
+#define TURN_SPEED 50
 
 //=========================================================
-// auto selection type options
+// auto selection points
 //=========================================================
+/**
+* @enum e_auto_selection_points Tells the robot what part it is in the selection program
+* @var e_auto_selection_points::SELECTION_START_POINT
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_START_DELAY
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_MISSION_POINT
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_MISSION_DELAY
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_END_POINT
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_SUB_GRABBERS
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_GYRO_CAL
+*      Tells the robot to go to this part in the selection program
+*  @var e_auto_selection_points::SELECTION_SELECTION_TYPE
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_GRAPH_NUMBER_INPUT
+*     Tells the robot to go to this part in the selection program
+* @var e_auto_selection_points::SELECTION_QUICK_INPUT
+*			Tells the robot to go to this part in the selection program
+*	@var e_auto_selection_points::SELECTION_SUB_RAMP
+*			Tells the robot to go to this part in the selection program
+*	@var e_auto_selection_points::SELECTION_CORNOR_DELAY
+*			Tells the robot to go to this part in the selection program
+*	@var e_auto_selection_points::SELECTION_RAMP_DELAY
+*			Tells the robot to go to this part in the selection program
+* @var g_auto_selection_point
+*			Tells the robot what phase its in on auto
+*/
 
 typedef enum
 {
-	STALL_ERROR,
-	STALL_CRATE_RUN,
-	STALL_CORNER_RUN,
-	STALL_RAMP_RUN,
-	STALL_DEFENCE_RUN
-} e_stall_points;
+	SELECTION_START_POINT,
+	SELECTION_START_DELAY,
+	SELECTION_MISSION_POINT,
+	SELECTION_MISSION_DELAY,
+	SELECTION_END_POINT,
+	SELECTION_SUB_GRABBERS,
+	SELECTION_GYRO_CAL,
+	SELECTION_SELECTION_TYPE,
+	SELECTION_GRAPH_NUMBER_INPUT,
+	SELECTION_QUICK_INPUT,
+	SELECTION_SUB_RAMP,
+	SELECTION_CORNOR_DELAY,
+	SELECTION_RAMP_DELAY
+} e_auto_selection_points;
 
-int g_stall_points [4];
+e_auto_selection_points g_auto_selection_point = SELECTION_START_POINT;
 
 //=========================================================
 // auto selection type options
@@ -289,6 +339,16 @@ typedef enum
 //=========================================================
 // auto sub selections
 //=========================================================
+/**
+*  @enum e_direction Tells the robot to drive backwords or forwards onto the ramp
+*  @var e_direction::SUB_SELECTION_GRABBERS_OUT
+*     turn clockwise drive with the grabbers out
+*  @var e_direction::SUB_SELECTION_GRABBERS_IN
+*     turn counterclockwise drive with the grabbers in
+*	@var g_auto_grabber_selections
+*			Tells the robot is the grabbers are in or out
+*/
+
 typedef enum
 {
 	SUB_SELECTION_GRABBERS_OUT,
@@ -296,6 +356,13 @@ typedef enum
 } e_auto_sub_selection;
 
 e_auto_sub_selection g_auto_grabber_selections = SUB_SELECTION_GRABBERS_IN;
+/**
+* @enum e_auto_sub_selection_ramp_sides Tells the robot the side if the ramp it should drive on
+* @var e_auto_sub_selection_ramp_sides::SUB_SELECTION_RAMP_ALLY_SIDE
+*		Drive on the ally side
+* @var e_auto_sub_selection_ramp_sides::SUB_SELECTION_RAMP_OPP_SIDE
+*		Drive on opp side
+*/
 
 typedef enum
 {
@@ -303,7 +370,32 @@ typedef enum
 	SUB_SELECTION_RAMP_OPP_SIDE
 } e_auto_sub_selection_ramp_sides;
 
+/**
+* @var g_auto_sub_selection_ramp_side
+*		Tells the robot the if it should go on the ally or opp side
+*/
 e_auto_sub_selection_ramp_sides g_auto_sub_selection_ramp_side = SUB_SELECTION_RAMP_ALLY_SIDE;
+
+typedef enum
+{
+	SUB_SELECTION_IR_ALL,
+	SUB_SELECTION_IR_1_2,
+	SUB_SELECTION_IR_3_4
+} e_auto_sub_selection_IR_partial_types;
+
+/**
+* @enum e_auto_sub_selection_IR_partial_types Tells the robot what IR section to do
+* @var e_auto_sub_selection_IR_partial_types::SUB_SELECTION_IR_ALL
+*		Tells the robot the search for IR in all of the points
+* @var e_auto_sub_selection_IR_partial_types::SUB_SELECTION_IR_1_2
+*		Tells the robot to search for IR in point 1 and 2
+* @var e_auto_sub_selection_IR_partial_types::SUB_SELECTION_IR_3_4
+*		Tells the robot to search for IR in point 3 and 4
+*
+* @var g_auto_sub_selection_IR_partial
+*		Tells the robot the IR section
+*/
+e_auto_sub_selection_IR_partial_types g_auto_sub_selection_IR_partial = SUB_SELECTION_IR_ALL;
 
 /**
 *  @enum e_auto_sub_selection_ramp Tells the robot to drive onto the ramp and continue or stop
@@ -344,6 +436,10 @@ typedef enum
 	SUB_SELECTION_RAMP_CONTINUED
 } e_auto_sub_selection_ramp;
 
+/**
+* @var g_auto_selection_ramp_continue_options
+*		Tells the robot if it should stop or continue on the ramp
+*/
 e_auto_sub_selection_ramp g_auto_selection_ramp_continue_options = SUB_SELECTION_RAMP_STOP;
 
 /**
@@ -358,16 +454,6 @@ typedef enum
 	RAW,
 	CALIBRATED
 } e_gyro_val_type;
-
-//=======needs=doxegen==========
-typedef enum
-{
-	GYRO1,
-	GYRO2,
-	ALL_GYROS,
-	SELECTED_GYRO
-} e_gyro_names;
-e_gyro_names g_gyro_use = GYRO1;
 
 /**
 *  @enum e_angle_val_type the type of angle sensor units to read
@@ -440,25 +526,6 @@ typedef enum
 *
 * @var g_backwards_crate4_to_turn_dist
 * 		 Tells the robot how far it need to go to get to the turn
-*
-* @def MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE
-*				Tells the robot the max distence it need to go to reach the line
-*
-* @def MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE
-*				Tells the robot the min distence it needs to go  to reach the line
-*
-* @def FORWARD_IR_THRESHOLD
-*				Tells the robot the minimum distence it need to go to detect the ir
-*
-* @def BACKWARD_IR_THRESHOLD
-*				Tells the robot the minimum distence it need to go to detect the ir
-* @def MIN_DRIVE_SPEED
-*				Tells the robot the minanum drive speed
-* @def MIN_TURN_SPEED
-* 			Tells the robot the minanum turn speed
-*
-* @def DRIVE_SPEED_PERCENTAGE_DROP
-*				Tells the robot the percentage it can drop
 */
 
 int g_to_turn_dist = 0;
@@ -475,22 +542,34 @@ const int g_backwards_crate2_to_turn_dist = 65;
 const int g_backwards_crate3_to_turn_dist = 115;
 const int g_backwards_crate4_to_turn_dist = 140;
 
+/**
+* @def MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE
+*		Tells the robot the maxamum drive dist  to first ramp
+*
+* @def MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE
+*		Tells the robot the maxamum drive dist tot the first ramp
+*
+* @def DRIVE_DIST_TO_OPP_RAMP_SIDE
+*		Tells the robot the distence it need to drive in order to got to the opponents ramp
+*
+*	@def FORWARD_IR_THRESHOLD
+*		Tells the robot what the IR values need to be in order to detect the IR
+*
+*	@def BACKWARD_IR_THRESHOLD
+*		Tells the robot what the IR values need to be in order to detect the IR
+*
+* @var g_reset_angle_record
+*		Tells the robot of it should keep the value of the angle sensor or not
+*/
 #define MAX_DRIVE_DIST_TO_FIRST_RAMP_LINE 110
 #define MIN_DRIVE_DIST_TO_FIRST_RAMP_LINE 20
 
-#define DRIVE_DIST_TO_OPP_RAMP_SIDE 165
+#define DRIVE_DIST_TO_OPP_RAMP_SIDE 142
 
 #define FORWARD_IR_THRESHOLD 7
 #define BACKWARD_IR_THRESHOLD 3
 
-#define MIN_DRIVE_SPEED 10
-#define MIN_TURN_SPEED 10
-#define DRIVE_SPEED_PERCENTAGE_DROP 50
-#define DRIVE_SPEED_COEFFICIENT 5
-#define TURN_SPEED_PERCENTAGE_DROP 50
-#define TURN_SPEED_COEFFICIENT 5
-
-int abdd_down_speed = 3;
+bool g_reset_angle_record = true;
 
 //=========================================================
 // auto number input variable
@@ -507,47 +586,34 @@ int abdd_down_speed = 3;
 
 int g_input_array[INPUT_ARRAY_SIZE];
 
-bool g_gyro1_active = true;
-bool g_gyro2_active = false;
-//=========================================================
-// backup function variables
-//=========================================================
-#define RECOVERY_RECORD_AMOUNT 5
-
-#define R_FIRST_MOVE 1
-#define R_CORNER_TURN 2
-#define R_CORNER_MOVE 3
-#define R_RAMP_TURN 4
-#define R_RAMP_MOVE 5
-
-int g_r_mission_movement_dists[RECOVERY_RECORD_AMOUNT+1];
 //=========================================================
 // Datalogging variables
 //=========================================================
 /**
-* @var LogFileName
-*		The name of the data logging file
-*
-* @var LogIoResult
-*		The success status of writing to the log file
-*
-* @var LogFileHandle
-*		The file handle variable (represents the file)
-*
-* @var LogFileSize
-*		The size of the log file
-*
-* @var CRLF
-*		characters required to cause output to appear on a new line
-*
-* @var LogData
-*		Tells the robot is if should log data or not
-*
-* @var g_delta_drift
-*		Tells the robot the delta of the drift
-* @var dl_dist_method
-*		Tells the robot the method we are going to calculate the distence
-*/
+ * @var LogFileName
+ *		The name of the data logging file
+ *
+ * @var LogIoResult
+ *		The success status of writing to the log file
+ *
+ * @var LogFileHandle
+ *		The file handle variable (represents the file)
+ *
+ * @var LogFileSize
+ *		The size of the log file
+ *
+ * @var CRLF
+ *		characters required to cause output to appear on a new line
+ *
+ * @var LogData
+ *		Tells the robot is if should log data or not
+ *
+ * @var sString
+ *		Tells the robot the string we are sending to the wright handler
+ *
+ * @var g_delta_drift
+ *		Tells the robot the delta of the drift
+ */
 const string LogFileName = "DATALOG.txt";
 TFileIOResult LogIoResult;
 TFileHandle LogFileHandle;
@@ -556,13 +622,7 @@ string sString;
 string CRLF = (char)13+(char)10;
 
 bool LogData = false;
-
-
 float g_delta_drift = 0;
-float g_delta_drift2 = 0;
-//string sString;
-
-int dl_drive_details [] = {0,4};
 
 //=========================================================
 // Misc
@@ -597,13 +657,19 @@ int dl_drive_details [] = {0,4};
 * @var g_selection_value
 *		degbuging var for this
 *
-* @def end_program_drive_speed
-*		Tells the robot the speed of its self
+* @var g_quick_mission
+*		Tells the robot the namber for quick selection
+*
+* @var g_max_quick_missions
+*		Tells the robot the maxamum amout of quick selection programs
 */
 
 int g_debug_time_1 = 0;
 int g_debug_time_2 = 0;
 
+
+int g_quick_mission = 1;
+int g_max_quick_missions = 6;
 int g_auto_ending_points = 9;
 int g_travel_dist = 0;
 int g_auto_starting_points = 6;
@@ -617,57 +683,81 @@ bool g_joy2_enabled = false;
 
 int g_selection_value = 0;
 
-#define end_program_drive_speed 50
 /**
-*
-* @var g_EOPD_delta_value
-*	the difference in EOPD values between black and white that we are looking for
-* @var g_calibrated_EOPD_threshold_val
-*	a configurable threshold for detecting the white line
-* @var g_end_ramp_lift_speed
-*	the speed to lift the block lifter before entering the ramp
-* @var g_shift_due_to_ir
-*	flag indicating that the robot jerked because of detecting IR from starting position 2
-* @var g_good_gyro
-*	flag indicating that the gyro has not given a bad reading
-* @def GYRO_VALUE_QUEUE_SIZE
-*	the size of the queue used to store the gyro readings
-* @var g_gyro_values
-*	array used to store all the gyro readings for debug purposes
-* @var g_gyro_ran
-*	flag indicating that we have performed at least one gyro read
+* @def MIN_DRIVE_SPEED
+*		Tells the robot the min drive speed
+* @def MIN_TURN_SPEED
+*		Tells the robot the min turn speed
+*	@def DRIVE_SPEED_PERCENTAGE_DROP
+*		Tells the robot the percentage it should drop when slowing down the speed
+* @def DRIVE_SPEED_COEFFICIENT
+*		Tells the robot how fast it should drop the speed
+*	@def TURN_SPEED_PERCENTAGE_DROP
+*		Tells the robot the persentage it should drop the speed
+* @def TURN_SPEED_COEFFICIENT
+*		Tells the robot how fast it should drop the speed
 */
-const int g_EOPD_delta_value = 300;
-int g_calibrated_EOPD_threshold_val = 0;
+
+#define MIN_DRIVE_SPEED 10
+#define MIN_TURN_SPEED 15
+#define DRIVE_SPEED_PERCENTAGE_DROP 50
+#define DRIVE_SPEED_COEFFICIENT 5
+#define TURN_SPEED_PERCENTAGE_DROP 50
+#define TURN_SPEED_COEFFICIENT 5
+/**
+ *
+ * @var g_optical_delta_value
+ *	the difference in optical between black and white that we are looking for
+ * @var g_calibrated_optical_threshold_val
+ *	a configurable threshold for detecting the white line
+ * @var g_end_ramp_lift_speed
+ *	the speed to lift the block lifter before entering the ramp
+ * @var g_shift_due_to_ir
+ *	flag indicating that the robot jerked because of detecting IR from starting position 2
+ * @var g_good_gyro
+ *	flag indicating that the gyro has not given a bad reading
+ * @def GYRO_VALUE_QUEUE_SIZE
+ *	the size of the queue used to store the gyro readings
+ * @var g_gyro_values
+ *	array used to store all the gyro readings for debug purposes
+ * @var g_gyro_ran
+ *	flag indicating that we have performed at least one gyro read
+ */
+#if EOPD_ACTIVE == 1
+const int g_optical_delta_value = 100;
+#else
+const int g_optical_delta_value = 2;
+#endif
+int g_calibrated_optical_threshold_val = 0;
 int g_end_ramp_lift_speed = 40;
 bool g_shift_due_to_ir = false;
 bool g_good_gyro = true;
 
 #if DEBUG_MODE == 1
-#define GYRO_VALUE_QUEUE_SIZE 3
-int g_gyro_values[GYRO_VALUE_QUEUE_SIZE];
+	#define GYRO_VALUE_QUEUE_SIZE 3
+	int g_gyro_values[GYRO_VALUE_QUEUE_SIZE];
 #endif
 
 bool g_gyro_ran = false;
 /**
-* @def MAX_TURN_RATE
-*		Tells the robot the max rate thats possable to happen so we can know if the gyro gliches
-* @def STAY_ON_RAMP_WAIT_TIME
-*		Tells the robot the wait time before it  gose on the ramp
-* @def EOPD_SENSOR_CALIBRATION_TIME
-*		Tells the robot the time the EOPD needs to calibrate
-* @def EOPD_CALIBRATION_SAMPLE_RATE
-*		Tells the robot the Calibration sample rate
-* @def DEFAULT_CALIBRATED_EOPD_THRESHOLD
-*		Tells the robot the default calibration of the EOPD to force it to fail if it gives us weid readings
-* @def DELAY_MULTIPLICATION_FACTOR
-*	the factor to multiply all delays by
-*/
+ * @def MAX_TURN_RATE
+ *		Tells the robot the max rate thats possable to happen so we can know if the gyro gliches
+ * @def STAY_ON_RAMP_WAIT_TIME
+ *		Tells the robot the wait time before it  gose on the ramp
+ * @def OPTICAL_SENSOR_CALIBRATION_TIME
+ *		Tells the robot the time it needs to calibrate
+ * @def OPTICAL_CALIBRATION_SAMPLE_RATE
+ *		Tells the robot the Calibration sample rate
+ * @def DEFAULT_CALIBRATED_OPTICAL_THRESHOLD
+ *		Tells the robot the default calibration of the optical to force it to fail if it gives us weid readings
+ * @def DELAY_MULTIPLICATION_FACTOR
+ *	the factor to multiply all delays by
+ */
 #define MAX_TURN_RATE 0.72
 #define STAY_ON_RAMP_WAIT_TIME 100
-#define EOPD_SENSOR_CALIBRATION_TIME 2000
-#define EOPD_CALIBRATION_SAMPLE_RATE 100
-#define DEFAULT_CALIBRATED_EOPD_THRESHOLD 9999
+#define OPTICAL_SENSOR_CALIBRATION_TIME 2000
+#define OPTICAL_CALIBRATION_SAMPLE_RATE 100
+#define DEFAULT_CALIBRATED_OPTICAL_THRESHOLD 9999
 #define DELAY_MULTIPLICATION_FACTOR 1000
 
 //=============================================================
@@ -738,7 +828,7 @@ e_turn_types g_em_first_turn_type = CONSTANT_TURN;
 * @var g_drive_type
 *		Tells the robot if it should drive useing the gyro, encode or non
 */
-e_turn_types g_em_second_turn_type = RELATIVE_TURN;
+e_turn_types g_em_second_turn_type = CONSTANT_TURN;
 
 int g_selection_turn = 1;
 
@@ -753,8 +843,6 @@ int g_start_delay = 0;
 int g_gyro_cal_time = 5;
 bool g_stay_on_ramp = true;
 
-e_drive_type g_drive_type = GYRO;
-
 int g_dist_backwards = 0;
 
 int START_POINT_MAX_VAL = 4;
@@ -767,45 +855,43 @@ int g_number_max_limit [] = {0,6,30,7,30,9};
 //=============================================================
 
 /**
-* @var g_gyro_noise1
+* @var g_gyro_noise
 *		Tells the robot how much gyro noise there is
 * @var g_start_time
 *		Tells the robot the start time
 * @var g_drift
 *		Tells the robot the gyro drift
-* @var g_const_heading1
+* @var g_const_heading
 *		Tells the robot the const heading
-* @var g_rel_heading1
+* @var g_rel_heading
 *		Tells the robot the relitive heading
 * @var g_curr_time
 *		Tells the robot the current time
 * @var g_prev_time
 *		Tells the robot the current time
+* @var g_raw_gyro
+*		Tells the robt the raw gyro value
 * @var g_recont_heading
 *		This is the recalculated const gyro heading
+* @var g_sacred_const_heading
+*		This is the recalculated value of the gyrp baced on a calculation
 */
-bool g_gyro1_cal_done = false;
-bool g_gyro2_cal_done = false;
-
-int g_gyro_noise1 = 0;
-int g_gyro_noise2 = 0;
+int g_gyro_noise = 0;
 long g_start_time = 0;
-int g_gyro1_drift = 0;
-int g_gyro2_drift = 0;
-float g_const_heading1 = 0;
-float g_const_heading2 = 0;
-float g_const_heading_use = 0;
-float g_rel_heading1 = 0;
-float g_rel_heading2 = 0;
-float g_rel_heading_use = 0;
+int g_drift = 0;
+float g_sacred_const_heading = 0;
+float g_const_heading = 0;
+float g_rel_heading = 0;
 long g_curr_time = 0;
 long g_prev_time = 0;
+int g_raw_gyro = 0;
 int g_recont_heading = 0; //this is the recalculated const gyro heading
-int g_recont_heading2 = 0;
-int g_recont_heading_use = 0;
 
 /**
 * Sensor variables
+*
+* @var g_light_sensor
+*		holds the value of the light sensor
 *
 * @var g_bearing_ac1
 *		the raw value from the first IR sensor
@@ -842,6 +928,7 @@ int g_recont_heading_use = 0;
 */
 
 bool dist_record = true;
+int g_light_sensor;
 int g_bearing_ac1 = 0;
 int g_bearing_ac2 = 0;
 float g_ir_bearing1 = 0.0;
@@ -876,16 +963,8 @@ bool g_reset_angle = false;
 *		 Tells the robot the value of the accelermoeter
 * @var g_accelermoeter_average
 *		Tells the robot the avage number for the accelermoeter
-*
-* @var g_sensor_num
-*		 Tells the robot the sensor we are reading
-* @var g_sensor_max
-*		Tells the robot he max amoun of sensors
-* @var g_sensor_value
-*		Tells the robot the value of the sensor its reading
-* @var g_sensor_value2
-*		Tells the robot the second line of the senser its reading
 */
+
 int g_accelermoeter_sensor = 0;
 int g_x_axis = 0;
 int g_y_axis = 0;
@@ -896,37 +975,26 @@ int g_accelermoeter_array [] = {0,30};
 ubyte g_accelermoeter_total_value = 0;
 int g_accelermoeter_average = 0;
 
+
 /**
 * @var g_sensor_reference_drive
-*		Tells the robot if it should run with sensors enabled
-* @var g_sensor_list
-*		 Tells the robot the sensors that are on it
-* @var g_basic_word_list
-*		 Tells the robot the basic word list
-*
+*		Tells the robot if it should use sensors to help it drive
 */
 
 bool g_sensor_reference_drive = false;
 
-string g_sensor_list [] = {
-	"unknown ",
-	"gyro    ",
-	"IR   IR2",
-	"accel   ",
-	"tilt    "};
-
 /**
-*  @enum e_EOPD_sensor_status Tells the robot if it should turn on the EOPD sensor
-*  @var e_EOPD_sensor_status::ACTIVE
+*  @enum e_light_sensor_status Tells the robot if it should turn on the light sensor
+*  @var e_light_sensor_status::ACTIVE
 *     Turn it on
-*   @var e_EOPD_sensor_status::INACTIVE
+*   @var e_light_sensor_status::INACTIVE
 *     turn it off
 */
 typedef enum
 {
 	ACTIVE,
 	INACTIVE
-} e_EOPD_sensor_status;
+} e_light_sensor_status;
 
 //==============================================================
 // Define graph selection variables
@@ -958,13 +1026,11 @@ int g_graph_selection_tab = 0;
 *			Tells the robot the number for an error
 */
 #define ERR_NONE 0
-#define ERR_GYRO_CAL1 1
-#define ERR_GYRO_MUX1 2
+#define ERR_GYRO_CAL 1
+#define ERR_GYRO_MUX 2
 #define ERR_SENSOR_MUX 3
 #define ERR_JOYSTICKS 4
 #define ERR_ACCELERMOETER 5
-#define ERR_GYRO_CAL2 6
-#define ERR_GYRO_MUX2 7
 
 int g_error = 0;
 
@@ -986,6 +1052,3 @@ typedef enum
 } e_error_types;
 
 e_error_types g_error_type = ERROR_LETHAL;
-
-int g_quick_mission = 1;
-int g_max_quick_missions = 6;

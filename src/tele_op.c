@@ -38,6 +38,7 @@
 
 #include "JoystickDriver.c"
 #include "lib/xander/hitechnic-sensormux.h"
+#include "drivers/hitechnic-accelerometer.h"
 #include "lib/xander/hitechnic-irseeker-v2.h"
 #include "lib/xander/hitechnic-gyro.h"
 #include "lib/xander/hitechnic-angle.h"

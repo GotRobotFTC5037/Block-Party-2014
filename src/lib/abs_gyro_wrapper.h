@@ -19,9 +19,10 @@
 
 #define REPEAT 4
 
-float abs_gyro_wrapper(e_gyro_names which_gyro)
+float abs_gyro_wrapper()
 {
 	int delta_total = 0;
+	int drift_old = 0;
 	int delta_gyro_array [REPEAT-1];
 	memset(delta_gyro_array,0,REPEAT-1);
 	int drift_gyro_array [REPEAT];
@@ -29,7 +30,9 @@ float abs_gyro_wrapper(e_gyro_names which_gyro)
 
 	for(int i=0;i<REPEAT;i++)
 	{
-	  drift_gyro_array[i] = abs_gyro_cal(g_gyro_cal_time,which_gyro);
+	  drift_gyro_array[i] = abs_gyro_cal(g_gyro_cal_time);
+//	  delta_gyro_array[i] = drift-drift_old;
+	//  drift_old = drift;
 	}
 	for(int i=0;i<REPEAT-1;i++)
 	{
@@ -37,14 +40,11 @@ float abs_gyro_wrapper(e_gyro_names which_gyro)
 		delta_total += delta_gyro_array[i];
 	}
 
-	if(which_gyro==GYRO1)g_delta_drift = delta_total/(REPEAT-1);
-	else g_delta_drift2 = delta_total/(REPEAT-1);
+	g_delta_drift = delta_total/(REPEAT-1);
 
-	if(which_gyro==GYRO1) abs_dlog("GYRO1","");
-	else abs_dlog("GYRO2","");
-	abs_dlog(__FILE__ ,"Program start"," drift1: ", drift_gyro_array[0]," drift2: %d ", drift_gyro_array[1]," drift3: %d ", drift_gyro_array[2]," drift4: %d ", drift_gyro_array[3]);
-	abs_dlog(__FILE__ ,"Program start"," delta1: ", delta_gyro_array[0]," delta2: %f ", delta_gyro_array[1]," delta3: %f ", delta_gyro_array[2]);
-	abs_dlog(__FILE__ ,"Program start"," Drift: ", drift_gyro_array[REPEAT-1], " delta: ", g_delta_drift);//change based on gyro in use
+	abs_dlog(__FILE__ ,"Program start"," dr1: ", drift_gyro_array[0]," dr2: %d ", drift_gyro_array[1]," dr3: %d ", drift_gyro_array[2]," dr4: %d ", drift_gyro_array[3]);
+	abs_dlog(__FILE__ ,"Program start"," d1: ", delta_gyro_array[0]," d2: %f ", delta_gyro_array[1]," d3: %f ", delta_gyro_array[2]);
+	abs_dlog(__FILE__ ,"Program start"," Drift: ", drift_gyro_array[REPEAT-1], " delta: ", g_delta_drift);
 
 	return drift_gyro_array[REPEAT-1];
 }

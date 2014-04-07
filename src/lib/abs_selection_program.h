@@ -20,8 +20,6 @@
 #include "abs_selection_advanced.h"
 #include "abs_selection_options.h"
 #include "lib/abs_cscreen.h"
-#include "lib/abs_ramp_interpret.h"
-
 
 void abs_selection_program()
 {
@@ -81,7 +79,6 @@ void abs_selection_program()
 		abs_selection_options();
 		abs_selection_program();
 	}
-
 	//---------------------------------------
 	// Start of gyro cal selection
 	//---------------------------------------

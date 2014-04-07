@@ -57,8 +57,8 @@ typedef enum
  *     Drive until the robot detects the IR becon using the second IR sensor spesified in dist
  *  @var e_move_stopping_method::E_ANGLE
  *     Drive for a certain amount of degrees spesified in dist
- *  @var e_move_stopping_method::E_EOPD
- *     Drive until the EOPD sensor detects the lighting condition specified in dist
+ *  @var e_move_stopping_method::E_OPTICAL
+ *     Drive until the optical sensor detects the lighting condition specified in dist
  */
 typedef enum
 {
@@ -69,8 +69,7 @@ typedef enum
  	E_IR_DETECT,
  	E_IR_DETECT2,
  	E_ANGLE,
-  E_EOPD
-} e_move_stopping_method; //will make a method with a tilt sensor(wheel in the middle of the robot
+  E_OPTICAL} e_move_stopping_method; //will make a method with a tilt sensor(wheel in the middle of the robot
 
 /**
  *  @enum e_turn_method Tells the robot what type of turn it should do
@@ -136,7 +135,7 @@ typedef enum
 //Tells the robot to turn and then slowdown when it approches its desination
 int adjusted_speed(int speed, int max_move_dist, int current, int coefficient, int percentage)
 {
-	float percent_of_speed = coefficient * sqrt(max_move_dist-current) + percentage;
+	float percent_of_speed = coefficient * sqrt(abs(max_move_dist-current)) + percentage;
 	int reduced_speed = (int)percent_of_speed * speed / 100;
 
 	if(reduced_speed > speed) { reduced_speed = speed; }
@@ -160,6 +159,6 @@ int adjusted_speed(int speed, int max_move_dist, int current, int coefficient, i
  *
  * Z = Current degrees
  */
-#define adjusted_turn_speed(X, Y, Z) (X)//adjusted_speed(X, Y, Z, TURN_SPEED_COEFFICIENT, TURN_SPEED_PERCENTAGE_DROP)
+#define adjusted_turn_speed(X, Y, Z) adjusted_speed(X, Y, Z, TURN_SPEED_COEFFICIENT, TURN_SPEED_PERCENTAGE_DROP)
 
 #endif /* !ABS_TURN_UTILS */

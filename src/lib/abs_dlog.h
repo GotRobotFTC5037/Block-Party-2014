@@ -38,10 +38,10 @@ void abs_dlog(const char * input1,const char * input2, const char * input3_str =
 	StringFormat(buff, "%09.3f\t",(((float)nPgmTime)/1000));
 	WriteText(LogFileHandle, LogIoResult, buff);
 
-	StringFormat(buff, "rel-g %4d\t", g_rel_heading_use);
+	StringFormat(buff, "rel-g %4d\t", g_rel_heading);
 	WriteText(LogFileHandle, LogIoResult, buff);
 
-	StringFormat(buff, "cnst-g %4d\t", g_const_heading_use);
+	StringFormat(buff, "cnst-g %4d\t", g_const_heading);
 	WriteText(LogFileHandle, LogIoResult, buff);
 
 	WriteText(LogFileHandle, LogIoResult, input1);
