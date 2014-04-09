@@ -42,7 +42,7 @@ void abs_s2_mission_execute()
 
 			g_reset_angle_record = false;
 			dist_record = true;
-			abs_drive(FORWARD, E_ANGLE, to_crate - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
+			abs_drive(BACKWARD, E_ANGLE, to_crate - abs_get_angle_sensor_val(RELATIVE_BPU), IR_DRIVE_SPEED, true, GYRO);
 		}
 		//Only use g_shift_due_to_ir when shifted due the the ir detecting
 		PlayTone(200,20);

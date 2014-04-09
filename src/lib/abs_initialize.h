@@ -102,8 +102,10 @@ if(nNxtButtonPressed != kEnterButton) wait1Msec(5000);
 
 	eraseDisplay();
 	g_start_time = nPgmTime;
-	while(time1[T1]<g_start_delay*1000)	//wait for start delay, number option tab 2
-	{abs_cscreen("Delay   ","","&1d       ",(g_start_delay*1000)-g_start_time);}
+
+	//while(/*time1[T1]*/nPgmTime-g_start_time<g_start_delay*1000)	//wait for start delay, number option tab 2
+	//{abs_cscreen("Delay   ","","&1d       ",(g_start_delay*1000)-g_start_time);}
+	wait1Msec(g_start_delay * DELAY_MULTIPLICATION_FACTOR);
 
 	eraseDisplay();
 }
